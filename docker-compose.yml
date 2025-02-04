@@ -1,0 +1,30 @@
+version: '3'
+services:
+  kinskeeper.rails.postgres.db:
+    image: postgres:17.2
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  kinskeeper.rails.web:
+    build: .
+    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    volumes:
+      - .:/myapp
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    depends_on:
+      - kinskeeper.rails.postgres.db
+  kinskeeper.mailhog:
+    image: mailhog/mailhog
+    depends_on:
+      - kinskeeper.rails.web
+    ports:
+      - "1025:1025"
+      - "8025:8025"
