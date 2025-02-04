@@ -72,6 +72,9 @@ GEM
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
       uri (>= 0.13.1)
+    argon2 (2.3.0)
+      ffi (~> 1.15)
+      ffi-compiler (~> 1.0)
     ast (2.4.2)
     base64 (0.2.0)
     bcrypt_pbkdf (1.1.1)
@@ -95,6 +98,15 @@ GEM
     erubi (1.13.1)
     et-orbi (1.2.11)
       tzinfo
+    ffi (1.17.1-aarch64-linux-gnu)
+    ffi (1.17.1-aarch64-linux-musl)
+    ffi (1.17.1-arm-linux-gnu)
+    ffi (1.17.1-arm-linux-musl)
+    ffi (1.17.1-x86_64-linux-gnu)
+    ffi (1.17.1-x86_64-linux-musl)
+    ffi-compiler (1.3.2)
+      ffi (>= 1.15.5)
+      rake
     fugit (1.11.1)
       et-orbi (~> 1, >= 1.2.11)
       raabro (~> 1.4)
@@ -108,6 +120,8 @@ GEM
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     json (2.9.1)
+    jwt (2.10.1)
+      base64
     kamal (2.4.0)
       activesupport (>= 7.0)
       base64 (~> 0.2)
@@ -219,6 +233,18 @@ GEM
     regexp_parser (2.10.0)
     reline (0.6.0)
       io-console (~> 0.5)
+    roda (3.88.0)
+      rack
+    rodauth (2.38.0)
+      roda (>= 2.6.0)
+      sequel (>= 4)
+    rodauth-model (0.4.0)
+      rodauth (~> 2.28)
+    rodauth-rails (2.0.2)
+      railties (>= 5.0, < 8.1)
+      roda (~> 3.76)
+      rodauth (~> 2.36)
+      rodauth-model (~> 0.2)
     rubocop (1.71.2)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
@@ -249,6 +275,11 @@ GEM
       rubocop-rails
     ruby-progressbar (1.13.0)
     securerandom (0.4.1)
+    sequel (5.89.0)
+      bigdecimal
+    sequel-activerecord_connection (2.0.0)
+      activerecord (>= 5.0, < 8.1)
+      sequel (~> 5.38)
     solid_cable (3.0.7)
       actioncable (>= 7.2)
       activejob (>= 7.2)
@@ -276,6 +307,7 @@ GEM
     thruster (0.1.10)
     thruster (0.1.10-aarch64-linux)
     thruster (0.1.10-x86_64-linux)
+    tilt (2.6.0)
     timeout (0.4.3)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
@@ -301,18 +333,23 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
+  argon2 (= 2.3.0)
   bootsnap
   brakeman
   debug
+  jwt (~> 2.10.1)
   kamal
   pg (~> 1.1)
   puma (>= 5.0)
   rails (~> 8.0.1)
+  rodauth-rails (~> 2.0.2)
   rubocop-rails-omakase
+  sequel-activerecord_connection (~> 2.0)
   solid_cable
   solid_cache
   solid_queue
   thruster
+  tilt (~> 2.6.0)
   tzinfo-data
 
 BUNDLED WITH

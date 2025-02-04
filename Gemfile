@@ -46,4 +46,12 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 end
 
-
+gem "rodauth-rails", "~> 2.0.2"
+# Enables Sequel to use Active Record's database connection
+gem "sequel-activerecord_connection", "~> 2.0"
+# Used by Rodauth for password hashing
+gem "argon2", "= 2.3.0"
+# Used by Rodauth for JWT support
+gem "jwt", "~> 2.10.1"
+# Used by Rodauth for rendering built-in view and email templates
+gem "tilt", "~> 2.6.0"
