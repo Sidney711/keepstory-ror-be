@@ -4,7 +4,7 @@ class RodauthMain < Rodauth::Rails::Auth
   configure do
     # List of authentication features that are loaded.
     enable :create_account, :verify_account, :verify_account_grace_period,
-      :login, :logout, :json, :jwt,
+      :login, :logout, :remember, :json,
       :reset_password, :change_password, :change_login, :verify_login_change,
       :close_account, :argon2
 
@@ -22,27 +22,14 @@ class RodauthMain < Rodauth::Rails::Auth
     # verify_account_table :user_verification_keys
     # verify_login_change_table :user_login_change_keys
     # reset_password_table :user_password_reset_keys
+    # remember_table :user_remember_keys
 
     # The secret key used for hashing public-facing tokens for various features.
     # Defaults to Rails `secret_key_base`, but you can use your own secret key.
-    # hmac_secret "b161a57dcae4509399a595fe3c1feacb296fc98c7d5dbf19b9a5f2e07c46dfa590ff44c37c2862e948b216e6b346148a45bdc20185ad8199e68a1e8b7218ff47"
+    # hmac_secret "c630bcc3affa9b773f51a57e85f50666095e7eefd761c342bcc1a6e47fdac670a731de4375e7fa67101c6218fae922e999783c2602e5791f2fe5eb8797d8ed9c"
 
     # Use a rotatable password pepper when hashing passwords with Argon2.
     # argon2_secret { hmac_secret }
-
-    # Since we're using argon2, prevent loading the bcrypt gem to save memory.
-    require_bcrypt? false
-
-    # Set JWT secret, which is used to cryptographically protect the token.
-    jwt_secret { hmac_secret }
-
-    # Accept only JSON requests.
-    only_json? true
-
-    # Handle login and password confirmation fields on the client side.
-    # require_password_confirmation? false
-    # require_login_confirmation? false
-
     create_verify_account_email do
       RodauthMailer.verify_account(self.class.configuration_name, account_id, verify_account_key_value)
     end
@@ -53,6 +40,15 @@ class RodauthMain < Rodauth::Rails::Auth
       RodauthMailer.verify_login_change(self.class.configuration_name, account_id, verify_login_change_key_value)
     end
 
+    # Since we're using argon2, prevent loading the bcrypt gem to save memory.
+    require_bcrypt? false
+
+    # Accept only JSON requests.
+    only_json? true
+
+    # Handle login and password confirmation fields on the client side.
+    # require_password_confirmation? false
+    # require_login_confirmation? false
 
     # Use path prefix for all routes.
     # prefix "/auth"
@@ -126,6 +122,16 @@ class RodauthMain < Rodauth::Rails::Auth
     #   end
     # end
 
+    # ==> Remember Feature
+    # Remember all logged in users.
+    after_login { remember_login }
+
+    # Or only remember users that have ticked a "Remember Me" checkbox on login.
+    # after_login { remember_login if param_or_nil("remember") }
+
+    # Extend user's remember period when remembered via a cookie
+    extend_remember_deadline? true
+
     # ==> Hooks
     # Validate custom fields in the create account form.
     # before_create_account do
@@ -147,5 +153,6 @@ class RodauthMain < Rodauth::Rails::Auth
     # verify_account_grace_period 3.days.to_i
     # reset_password_deadline_interval Hash[hours: 6]
     # verify_login_change_deadline_interval Hash[days: 2]
+    # remember_deadline_interval Hash[days: 30]
   end
 end
