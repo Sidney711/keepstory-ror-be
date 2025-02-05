@@ -1,0 +1,4 @@
+Someone has created an account with this email address.  If you did not create
+this account, please ignore this message.  If you created this account, please go to
+<%= ENV['FRONTEND_URL']+'/verify-account?key='+((@rodauth.verify_account_email_link).match(/key=([^&]+)/))[1] %>
+to verify the account.
