@@ -1,2 +1,2 @@
 #!/bin/sh
-docker compose run kinskeeper.rails.web bundle install --gemfile /app/Gemfile
+docker compose run keepstory.rails.web bundle install --gemfile /app/Gemfile

@@ -70,7 +70,7 @@ Rails.application.configure do
 
   config.action_mailer.perform_deliveries = true
   config.action_mailer.smtp_settings = {
-    address: 'kinskeeper.mailhog',
+    address: 'keepstory.mailhog',
     port: 1025
   }
 

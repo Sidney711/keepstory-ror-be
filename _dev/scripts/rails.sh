@@ -1,6 +1,6 @@
 #!/bin/sh
 
-BASE_CMD="docker compose exec kinskeeper.rails.web rails"
+BASE_CMD="docker compose exec keepstory.rails.web rails"
 
 if [ $# -eq 0 ]
 then

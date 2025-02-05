@@ -1,6 +1,6 @@
 version: '3'
 services:
-  kinskeeper.rails.postgres.db:
+  keepstory.rails.postgres.db:
     image: postgres:17.2
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -10,7 +10,7 @@ services:
       - ./tmp/db:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-  kinskeeper.rails.web:
+  keepstory.rails.web:
     build: .
     command: bundle exec rails s -p 3000 -b '0.0.0.0'
     volumes:
@@ -20,11 +20,11 @@ services:
     env_file:
       - .env
     depends_on:
-      - kinskeeper.rails.postgres.db
-  kinskeeper.mailhog:
+      - keepstory.rails.postgres.db
+  keepstory.mailhog:
     image: mailhog/mailhog
     depends_on:
-      - kinskeeper.rails.web
+      - keepstory.rails.web
     ports:
       - "1025:1025"
       - "8025:8025"

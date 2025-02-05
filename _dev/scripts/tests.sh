@@ -1,6 +1,6 @@
 #!/bin/sh
 
-BASE_CMD="docker compose exec kinskeeper.rails.web bundle exec rspec"
+BASE_CMD="docker compose exec keepstory.rails.web bundle exec rspec"
 
 if [ $# -eq 0 ]
 then
