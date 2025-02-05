@@ -55,3 +55,5 @@ gem "argon2", "= 2.3.0"
 gem "jwt", "~> 2.10.1"
 # Used by Rodauth for rendering built-in view and email templates
 gem "tilt", "~> 2.6.0"
+
+gem "rack-cors", "~> 2.0.2"
