@@ -7,4 +7,11 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+  namespace :api do
+    namespace :v1 do
+      jsonapi_resources :accounts do
+        get 'logged_in', on: :collection
+      end
+    end
+  end
 end

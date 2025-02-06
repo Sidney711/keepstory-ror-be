@@ -55,3 +55,5 @@ gem "sequel-activerecord_connection", "~> 2.0"
 gem "argon2", "= 2.3.0"
 # Used by Rodauth for rendering built-in view and email templates
 gem "tilt", "~> 2.4"
+gem 'csv', "~> 3.3.2"
+gem 'jsonapi-resources', "~> 0.11.0.beta2"
