@@ -44,6 +44,19 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+  gem 'rspec-rails', "~> 7.1.1"
+  gem 'factory_bot_rails', "~> 6.4.4"
+  gem 'faker', "~> 3.5.1"
 end
 
+gem "rodauth-rails", "~> 2.0.2"
 
+gem "rack-cors", "~> 2.0.2"
+# Enables Sequel to use Active Record's database connection
+gem "sequel-activerecord_connection", "~> 2.0"
+# Used by Rodauth for password hashing
+gem "argon2", "= 2.3.0"
+# Used by Rodauth for rendering built-in view and email templates
+gem "tilt", "~> 2.4"
+gem 'csv', "~> 3.3.2"
+gem 'jsonapi-resources', "~> 0.11.0.beta2"

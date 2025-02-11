@@ -32,3 +32,6 @@
 /config/master.key
 
 !/.env.example
+
+/.idea/*
+.idea/
