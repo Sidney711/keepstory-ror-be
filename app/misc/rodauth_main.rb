@@ -139,9 +139,9 @@ class RodauthMain < Rodauth::Rails::Auth
     # end
 
     # Perform additional actions after the account is created.
-    # after_create_account do
-    #   Profile.create!(account_id: account_id, name: param("name"))
-    # end
+    after_create_account do
+      Family.create!(account_id: account_id)
+    end
 
     # Do additional cleanup after the account is closed.
     # after_close_account do

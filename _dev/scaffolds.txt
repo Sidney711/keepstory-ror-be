@@ -1,0 +1,2 @@
+rails generate model Family uuid:string
+rails generate model FamilyMember first_name:string last_name:string date_of_birth:date date_of_death:date family:references
