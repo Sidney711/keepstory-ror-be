@@ -13,6 +13,7 @@ Rails.application.routes.draw do
         get 'logged_in', on: :collection
       end
       jsonapi_resources :family_members
+      jsonapi_resources :stories
     end
   end
 end

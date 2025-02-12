@@ -1,5 +1,6 @@
 class FamilyMember < ApplicationRecord
   belongs_to :family
+  has_and_belongs_to_many :stories
 
   validates :first_name, :last_name, presence: true
   validate :birth_date_cannot_be_in_future
