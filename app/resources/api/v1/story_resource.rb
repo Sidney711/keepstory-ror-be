@@ -3,7 +3,7 @@ module Api
     class StoryResource < JSONAPI::Resource
       attributes :title, :content, :date_type, :story_date, :story_year, :is_date_approx, :created_at, :updated_at
 
-      has_many :family_members
+      has_many :family_members, inverse: :stories
 
       def self.creatable_fields(context)
         super + [:family_members]

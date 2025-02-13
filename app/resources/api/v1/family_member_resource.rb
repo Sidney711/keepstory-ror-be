@@ -3,6 +3,8 @@ module Api
     class FamilyMemberResource < JSONAPI::Resource
       attributes :first_name, :last_name, :date_of_birth, :date_of_death, :created_at, :updated_at
 
+      has_many :stories, inverse: :family_members
+
       def self.creatable_fields(context)
         super - [:family_id]
       end
