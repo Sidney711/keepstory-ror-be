@@ -16,7 +16,7 @@
 # end
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins ENV["FRONTEND_URL"]
+    origins Rails.application.credentials[:frontend_url]
 
     resource "*",
              headers: :any,
