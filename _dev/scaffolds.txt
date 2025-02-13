@@ -1,0 +1,4 @@
+rails generate model Family uuid:string
+rails generate model FamilyMember first_name:string last_name:string date_of_birth:date date_of_death:date family:references
+rails generate migration CreateJoinTableStoriesFamilyMembers story family_member
+rails generate model Story title:string content:text date_type:string story_date:date story_year:integer is_date_approx:boolean family:references
