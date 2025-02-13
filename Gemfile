@@ -60,3 +60,5 @@ gem "argon2", "= 2.3.0"
 gem "tilt", "~> 2.4"
 gem 'csv', "~> 3.3.2"
 gem 'jsonapi-resources', "~> 0.11.0.beta2"
+
+gem 'net-smtp', '0.5.0'
