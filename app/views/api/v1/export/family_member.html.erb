@@ -1,0 +1,11 @@
+<p>Člen rodiny: <%= @family_member.first_name %> <%= @family_member.last_name %></p>
+
+<% @stories.each do |story| %>
+  <div class="story">
+    <h2><%= story.title %></h2>
+    <div class="content">
+      <%= story.content.html_safe %>
+    </div>
+    <hr>
+  </div>
+<% end %>

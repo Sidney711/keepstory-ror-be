@@ -14,6 +14,8 @@ Rails.application.routes.draw do
       end
       jsonapi_resources :family_members
       jsonapi_resources :stories
+
+      post 'export_to_pdf/family_member/:id', to: 'export#family_member'
     end
   end
 end
