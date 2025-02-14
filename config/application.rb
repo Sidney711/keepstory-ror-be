@@ -29,7 +29,7 @@ module Keepstory
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
 
-    config.session_store :cookie_store, key: ENV["COOKIES_SECRET_KEY"]
+    config.session_store :cookie_store, key: 'nSykxCqqSqixcsBjSBgQeXcdnDPvbw'
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use config.session_store, config.session_options
   end

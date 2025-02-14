@@ -1,0 +1,4 @@
+CREATE DATABASE keepstory_production;
+CREATE DATABASE keepstory_production_cache;
+CREATE DATABASE keepstory_production_queue;
+CREATE DATABASE keepstory_production_cable;
