@@ -18,9 +18,10 @@ default: &default
   # For details on connection pooling, see Rails configuration guide
   # https://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  host: <%= ENV.fetch("DB_HOST", "postgres") %>
-  username: <%= Rails.application.credentials.dig(:postgres, :user) %>
-  password: <%= Rails.application.credentials.dig(:postgres, :password) %>
+  username: keepstory
+  password: <%= ENV["POSTGRES_PASSWORD"] %>
+  host: <%= ENV["DB_HOST"] %>
+  port: 5432
 
 
 development:
@@ -85,8 +86,6 @@ production:
   primary: &primary_production
     <<: *default
     database: keepstory_production
-    username: keepstory
-    password: <%= Rails.application.credentials.dig(:postgres, :production_database_password) %>
   cache:
     <<: *primary_production
     database: keepstory_production_cache
