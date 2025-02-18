@@ -5,7 +5,7 @@ class FamilyMember < ApplicationRecord
   has_many :educations, dependent: :destroy
   has_many :employments, dependent: :destroy
   has_many :residence_addresses, dependent: :destroy
-  has_many :additional_data, dependent: :destroy
+  has_many :additional_attributes, dependent: :destroy
   has_many :marriages_as_first_partner, class_name: "Marriage", foreign_key: "first_partner_id", dependent: :destroy
   has_many :marriages_as_second_partner, class_name: "Marriage", foreign_key: "second_partner_id", dependent: :destroy
 
@@ -23,7 +23,7 @@ class FamilyMember < ApplicationRecord
   validates :profession, :hobbies_and_interests, length: { maximum: 1000 }, allow_blank: true
   validates :short_description, :short_message, length: { maximum: 2000 }, allow_blank: true
 
-  enum gender: { male: 0, female: 1, other: 2 }, _suffix: true
+  enum :gender, { male: 1, female: 2, other: 3 }
 
   validate :birth_date_cannot_be_in_future
   validate :death_date_cannot_be_in_future
