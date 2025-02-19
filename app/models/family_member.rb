@@ -179,6 +179,16 @@ class FamilyMember < ApplicationRecord
     end
   end
 
+  def residence_address_details
+    residence_addresses.map do |residence_address|
+      {
+        id: residence_address.id,
+        address: residence_address.address,
+        period: residence_address.period
+      }
+    end
+  end
+
   private
 
   def birth_date_cannot_be_in_future
