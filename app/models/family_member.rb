@@ -129,6 +129,34 @@ class FamilyMember < ApplicationRecord
     relationships
   end
 
+  def marriage_details
+    marriages = []
+
+    marriages_as_first_partner.each do |marriage|
+      partner = marriage.second_partner
+      marriages << {
+        id: marriage.id,
+        'partner-id' => partner.id,
+        'first-name' => partner.first_name,
+        'last-name' => partner.last_name,
+        'period' => marriage.period
+      }
+    end
+
+    marriages_as_second_partner.each do |marriage|
+      partner = marriage.first_partner
+      marriages << {
+        id: marriage.id,
+        'partner-id' => partner.id,
+        'first-name' => partner.first_name,
+        'last-name' => partner.last_name,
+        'period' => marriage.period
+      }
+    end
+
+    marriages
+  end
+
   private
 
   def birth_date_cannot_be_in_future

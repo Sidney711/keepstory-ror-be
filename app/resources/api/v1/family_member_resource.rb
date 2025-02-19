@@ -24,7 +24,8 @@ module Api
                  :short_message,
                  :created_at,
                  :updated_at,
-                 :relationship_tree
+                 :relationship_tree,
+                 :marriage_details
 
       has_many :stories, inverse: :family_members
       has_many :educations
