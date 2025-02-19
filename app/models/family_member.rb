@@ -29,6 +29,86 @@ class FamilyMember < ApplicationRecord
   validate :death_date_cannot_be_in_future
   validate :death_date_after_birth_date
 
+  RELATIONSHIP_TYPES = {
+    mother: 'mother',
+    father: 'father',
+    grandparent: 'grandparent',
+    descendant: 'descendant'
+  }.freeze
+
+  def children
+    FamilyMember.where("mother_id = ? OR father_id = ?", self.id, self.id)
+  end
+
+  def relationship_tree
+    relationships = []
+
+    if mother
+      relationships << {
+        id: mother.id,
+        first_name: mother.first_name,
+        last_name: mother.last_name,
+        relationship: RELATIONSHIP_TYPES[:mother]
+      }
+    end
+
+    if father
+      relationships << {
+        id: father.id,
+        first_name: father.first_name,
+        last_name: father.last_name,
+        relationship: RELATIONSHIP_TYPES[:father]
+      }
+    end
+
+    if mother&.mother
+      relationships << {
+        id: mother.mother.id,
+        first_name: mother.mother.first_name,
+        last_name: mother.mother.last_name,
+        relationship: RELATIONSHIP_TYPES[:grandparent]
+      }
+    end
+
+    if mother&.father
+      relationships << {
+        id: mother.father.id,
+        first_name: mother.father.first_name,
+        last_name: mother.father.last_name,
+        relationship: RELATIONSHIP_TYPES[:grandparent]
+      }
+    end
+
+    if father&.mother
+      relationships << {
+        id: father.mother.id,
+        first_name: father.mother.first_name,
+        last_name: father.mother.last_name,
+        relationship: RELATIONSHIP_TYPES[:grandparent]
+      }
+    end
+
+    if father&.father
+      relationships << {
+        id: father.father.id,
+        first_name: father.father.first_name,
+        last_name: father.father.last_name,
+        relationship: RELATIONSHIP_TYPES[:grandparent]
+      }
+    end
+
+    children.each do |child|
+      relationships << {
+        id: child.id,
+        first_name: child.first_name,
+        last_name: child.last_name,
+        relationship: RELATIONSHIP_TYPES[:descendant]
+      }
+    end
+
+    relationships
+  end
+
   private
 
   def birth_date_cannot_be_in_future

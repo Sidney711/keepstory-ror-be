@@ -23,7 +23,8 @@ module Api
                  :short_description,
                  :short_message,
                  :created_at,
-                 :updated_at
+                 :updated_at,
+                 :relationship_tree
 
       has_many :stories, inverse: :family_members
       has_many :educations
@@ -49,6 +50,10 @@ module Api
       #     context[:url_helpers].rails_blob_url(model.profile_picture, only_path: true)
       #   end
       # end
+
+      def relationship_tree
+        @model.relationship_tree
+      end
 
       def self.creatable_fields(context)
         super - [:family_id]
