@@ -26,7 +26,8 @@ module Api
                  :updated_at,
                  :relationship_tree,
                  :marriage_details,
-                 :education_details
+                 :education_details,
+                 :employment_details
 
       has_many :stories, inverse: :family_members
       has_many :educations

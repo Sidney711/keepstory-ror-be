@@ -168,6 +168,17 @@ class FamilyMember < ApplicationRecord
     end
   end
 
+  def employment_details
+    employments.map do |employment|
+      {
+        id: employment.id,
+        employer: employment.employer,
+        address: employment.address,
+        period: employment.period
+      }
+    end
+  end
+
   private
 
   def birth_date_cannot_be_in_future
