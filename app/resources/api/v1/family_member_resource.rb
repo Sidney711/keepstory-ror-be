@@ -38,6 +38,9 @@ module Api
       has_many :marriages_as_first_partner, class_name: 'Marriage'
       has_many :marriages_as_second_partner, class_name: 'Marriage'
 
+      has_one :mother, class_name: 'FamilyMember'
+      has_one :father, class_name: 'FamilyMember'
+
       # # Virtuální atributy pro Active Storage soubory
       # attribute :signature_url, format: :default
       # attribute :profile_picture_url, format: :default
