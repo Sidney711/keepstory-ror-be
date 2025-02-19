@@ -157,6 +157,17 @@ class FamilyMember < ApplicationRecord
     marriages
   end
 
+  def education_details
+    educations.map do |education|
+      {
+        id: education.id,
+        'school-name' => education.school_name,
+        address: education.address,
+        period: education.period
+      }
+    end
+  end
+
   private
 
   def birth_date_cannot_be_in_future
