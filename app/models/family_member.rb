@@ -33,7 +33,8 @@ class FamilyMember < ApplicationRecord
     mother: 'mother',
     father: 'father',
     grandparent: 'grandparent',
-    descendant: 'descendant'
+    descendant: 'descendant',
+    sibling: 'sibling'
   }.freeze
 
   def children
@@ -45,64 +46,83 @@ class FamilyMember < ApplicationRecord
 
     if mother
       relationships << {
-        id: mother.id,
-        first_name: mother.first_name,
-        last_name: mother.last_name,
-        relationship: RELATIONSHIP_TYPES[:mother]
+        'id' => mother.id,
+        'first-name' => mother.first_name,
+        'last-name' => mother.last_name,
+        'relationship' => RELATIONSHIP_TYPES[:mother]
       }
     end
 
     if father
       relationships << {
-        id: father.id,
-        first_name: father.first_name,
-        last_name: father.last_name,
-        relationship: RELATIONSHIP_TYPES[:father]
+        'id' => father.id,
+        'first-name' => father.first_name,
+        'last-name' => father.last_name,
+        'relationship' => RELATIONSHIP_TYPES[:father]
       }
     end
 
+    # Prarodiče
     if mother&.mother
       relationships << {
-        id: mother.mother.id,
-        first_name: mother.mother.first_name,
-        last_name: mother.mother.last_name,
-        relationship: RELATIONSHIP_TYPES[:grandparent]
+        'id' => mother.mother.id,
+        'first-name' => mother.mother.first_name,
+        'last-name' => mother.mother.last_name,
+        'relationship' => RELATIONSHIP_TYPES[:grandparent]
       }
     end
 
     if mother&.father
       relationships << {
-        id: mother.father.id,
-        first_name: mother.father.first_name,
-        last_name: mother.father.last_name,
-        relationship: RELATIONSHIP_TYPES[:grandparent]
+        'id' => mother.father.id,
+        'first-name' => mother.father.first_name,
+        'last-name' => mother.father.last_name,
+        'relationship' => RELATIONSHIP_TYPES[:grandparent]
       }
     end
 
     if father&.mother
       relationships << {
-        id: father.mother.id,
-        first_name: father.mother.first_name,
-        last_name: father.mother.last_name,
-        relationship: RELATIONSHIP_TYPES[:grandparent]
+        'id' => father.mother.id,
+        'first-name' => father.mother.first_name,
+        'last-name' => father.mother.last_name,
+        'relationship' => RELATIONSHIP_TYPES[:grandparent]
       }
     end
 
     if father&.father
       relationships << {
-        id: father.father.id,
-        first_name: father.father.first_name,
-        last_name: father.father.last_name,
-        relationship: RELATIONSHIP_TYPES[:grandparent]
+        'id' => father.father.id,
+        'first-name' => father.father.first_name,
+        'last-name' => father.father.last_name,
+        'relationship' => RELATIONSHIP_TYPES[:grandparent]
+      }
+    end
+
+    siblings = []
+    if mother && father
+      siblings = FamilyMember.where("(mother_id = ? OR father_id = ?) AND id != ?", mother.id, father.id, id)
+    elsif mother
+      siblings = FamilyMember.where("mother_id = ? AND id != ?", mother.id, id)
+    elsif father
+      siblings = FamilyMember.where("father_id = ? AND id != ?", father.id, id)
+    end
+
+    siblings.each do |sibling|
+      relationships << {
+        'id' => sibling.id,
+        'first-name' => sibling.first_name,
+        'last-name' => sibling.last_name,
+        'relationship' => RELATIONSHIP_TYPES[:sibling]
       }
     end
 
     children.each do |child|
       relationships << {
-        id: child.id,
-        first_name: child.first_name,
-        last_name: child.last_name,
-        relationship: RELATIONSHIP_TYPES[:descendant]
+        'id' => child.id,
+        'first-name' => child.first_name,
+        'last-name' => child.last_name,
+        'relationship' => RELATIONSHIP_TYPES[:descendant]
       }
     end
 
