@@ -38,6 +38,31 @@ class Api::V1::FamilyMembersController < ApplicationController
     end
   end
 
+  def update_signature
+    resource = FamilyMember.find(params[:id])
+    file = params.dig(:data, :attributes, :signature)
+    if file.present?
+      resource.signature.attach(file)
+      if resource.signature.attached?
+        render json: { signature_url: rails_blob_url(resource.signature, only_path: true) }, status: :ok
+      else
+        render json: { errors: resource.errors.full_messages }, status: :unprocessable_entity
+      end
+    else
+      render json: { errors: ["No signature provided"] }, status: :unprocessable_entity
+    end
+  end
+
+  def delete_signature
+    resource = FamilyMember.find(params[:id])
+    if resource.signature.attached?
+      resource.signature.purge
+      head :no_content
+    else
+      render json: { errors: ["No signature attached"] }, status: :unprocessable_entity
+    end
+  end
+
   protected
 
   def create_resource(object, context)

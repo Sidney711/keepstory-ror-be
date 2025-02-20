@@ -29,7 +29,8 @@ module Api
                  :education_details,
                  :employment_details,
                  :residence_address_details,
-                 :profile_picture_url
+                 :profile_picture_url,
+                 :signature_url
 
       has_many :stories, inverse: :family_members
       has_many :educations
@@ -46,6 +47,15 @@ module Api
         url_helpers = context[:url_helpers] || Rails.application.routes.url_helpers
         if _model.profile_picture.attached?
           url_helpers.rails_blob_url(_model.profile_picture, only_path: true)
+        else
+          nil
+        end
+      end
+
+      def signature_url
+        url_helpers = context[:url_helpers] || Rails.application.routes.url_helpers
+        if _model.signature.attached?
+          url_helpers.rails_blob_url(_model.signature, only_path: true)
         else
           nil
         end

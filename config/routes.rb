@@ -24,6 +24,8 @@ Rails.application.routes.draw do
         member do
           patch :update_profile_picture
           delete :delete_profile_picture
+          patch :update_signature
+          delete :delete_signature
         end
       end
     end
