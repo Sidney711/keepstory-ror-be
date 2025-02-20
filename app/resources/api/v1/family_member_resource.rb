@@ -28,7 +28,8 @@ module Api
                  :marriage_details,
                  :education_details,
                  :employment_details,
-                 :residence_address_details
+                 :residence_address_details,
+                 :profile_picture_url
 
       has_many :stories, inverse: :family_members
       has_many :educations
@@ -41,22 +42,14 @@ module Api
       has_one :mother, class_name: 'FamilyMember'
       has_one :father, class_name: 'FamilyMember'
 
-      # # Virtuální atributy pro Active Storage soubory
-      # attribute :signature_url, format: :default
-      # attribute :profile_picture_url, format: :default
-      #
-      # def signature_url
-      #   # Použijte metodu 'model' namísto 'object'
-      #   if model.signature.attached?
-      #     context[:url_helpers].rails_blob_url(model.signature, only_path: true)
-      #   end
-      # end
-      #
-      # def profile_picture_url
-      #   if model.profile_picture.attached?
-      #     context[:url_helpers].rails_blob_url(model.profile_picture, only_path: true)
-      #   end
-      # end
+      def profile_picture_url
+        url_helpers = context[:url_helpers] || Rails.application.routes.url_helpers
+        if _model.profile_picture.attached?
+          url_helpers.rails_blob_url(_model.profile_picture, only_path: true)
+        else
+          nil
+        end
+      end
 
       def relationship_tree
         @model.relationship_tree

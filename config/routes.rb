@@ -20,7 +20,12 @@ Rails.application.routes.draw do
       jsonapi_resources :marriages
       jsonapi_resources :residence_addresses
 
-      post 'export_to_pdf/family_member/:id', to: 'export#family_member'
+      jsonapi_resources :family_members do
+        member do
+          patch :update_profile_picture
+          delete :delete_profile_picture
+        end
+      end
     end
   end
 end
