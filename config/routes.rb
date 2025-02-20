@@ -19,6 +19,7 @@ Rails.application.routes.draw do
       jsonapi_resources :employments
       jsonapi_resources :marriages
       jsonapi_resources :residence_addresses
+      jsonapi_resources :additional_attributes
 
       jsonapi_resources :family_members do
         member do

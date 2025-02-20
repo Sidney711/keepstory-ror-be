@@ -30,7 +30,8 @@ module Api
                  :employment_details,
                  :residence_address_details,
                  :profile_picture_url,
-                 :signature_url
+                 :signature_url,
+                 :additional_attribute_details
 
       has_many :stories, inverse: :family_members
       has_many :educations

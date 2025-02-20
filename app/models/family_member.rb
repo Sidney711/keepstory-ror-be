@@ -168,6 +168,16 @@ class FamilyMember < ApplicationRecord
     end
   end
 
+  def additional_attribute_details
+    additional_attributes.map do |additional_attribute|
+      {
+        id: additional_attribute.id,
+        'attribute-name': additional_attribute.attribute_name,
+        'long-text': additional_attribute.long_text
+      }
+    end
+  end
+
   def employment_details
     employments.map do |employment|
       {
