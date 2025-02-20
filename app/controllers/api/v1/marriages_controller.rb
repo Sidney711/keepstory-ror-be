@@ -28,7 +28,6 @@ module Api
         end
 
         if marriage.save
-          # Předáme prázdný hash jako kontext
           render json: MarriageResource.new(marriage, {}).as_json, status: :created
         else
           render json: { errors: marriage.errors.full_messages }, status: :unprocessable_entity
