@@ -39,6 +39,7 @@ Rails.application.routes.draw do
       end
 
       post 'export_to_pdf/family_member/:id', to: 'export#family_member'
+      post 'export_to_pdf/family', to: 'export#family'
     end
   end
 end
