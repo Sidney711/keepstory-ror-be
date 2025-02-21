@@ -39,6 +39,10 @@ class FamilyMember < ApplicationRecord
     sibling: 'sibling'
   }.freeze
 
+  def export_pdf
+    family.export_pdf
+  end
+
   def children
     FamilyMember.where("mother_id = ? OR father_id = ?", self.id, self.id)
   end

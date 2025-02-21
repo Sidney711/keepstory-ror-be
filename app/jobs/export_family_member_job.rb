@@ -44,11 +44,15 @@ class ExportFamilyMemberJob < ApplicationJob
 
     pdf = WickedPdf.new.pdf_from_string(html)
 
-    output_path = Rails.root.join('tmp', 'pdfs')
-    FileUtils.mkdir_p(output_path) unless File.directory?(output_path)
-    file_path = output_path.join("family_member_#{family_member.id}.pdf")
-    File.open(file_path, 'wb') do |file|
-      file.write(pdf)
-    end
+    timestamp = Time.current.strftime('%Y%m%d%H%M%S')
+    filename = "family_member_#{family_member.id}_#{timestamp}.pdf"
+
+    io = StringIO.new(pdf)
+
+    family_member.documents.attach(
+      io: io,
+      filename: filename,
+      content_type: 'application/pdf'
+    )
   end
 end

@@ -154,7 +154,13 @@ class Api::V1::FamilyMembersController < ApplicationController
       document.purge
       head :no_content
     else
-      render json: { errors: ["Dokument nenalezen"] }, status: :not_found
+      family = resource.family
+      if family.export_pdf.attached? && family.export_pdf.blob.id.to_s == params[:document_id].to_s
+        family.export_pdf.purge
+        head :no_content
+      else
+        render json: { errors: ["Dokument nenalezen"] }, status: :not_found
+      end
     end
   end
 
@@ -164,11 +170,7 @@ class Api::V1::FamilyMembersController < ApplicationController
       return render json: { errors: ["Neoprávněný přístup"] }, status: :forbidden
     end
 
-    documents = resource.documents.map do |document|
-      { id: document.id, url: rails_blob_url(document, only_path: true), filename: document.filename.to_s, created_at: document.created_at }
-    end
-
-    render json: { documents: documents }, status: :ok
+    render json: { documents: all_documents_for(resource) }, status: :ok
   end
 
   protected
@@ -184,6 +186,29 @@ class Api::V1::FamilyMembersController < ApplicationController
   end
 
   private
+
+  def all_documents_for(resource)
+    documents = resource.documents.map do |document|
+      {
+        id: document.id,
+        url: rails_blob_url(document, only_path: true),
+        filename: document.filename.to_s,
+        created_at: document.created_at
+      }
+    end
+
+    if resource.family.export_pdf.attached?
+      export_pdf = resource.family.export_pdf
+      documents << {
+        id: export_pdf.blob.id,
+        url: rails_blob_url(export_pdf, only_path: true),
+        filename: export_pdf.filename.to_s,
+        created_at: export_pdf.created_at
+      }
+    end
+
+    documents
+  end
 
   def resource_params
     params.require(:data).require(:attributes).permit(:first_name, :last_name, :date_of_birth, :date_of_death)
