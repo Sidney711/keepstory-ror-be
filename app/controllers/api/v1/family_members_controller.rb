@@ -63,6 +63,60 @@ class Api::V1::FamilyMembersController < ApplicationController
     end
   end
 
+  def upload_images
+    resource = FamilyMember.find(params[:id])
+    unless resource.family.account_id == current_account.id
+      return render json: { errors: ["Neoprávněný přístup"] }, status: :forbidden
+    end
+
+    files = params.dig(:data, :attributes, :images)
+    unless files.present?
+      return render json: { errors: ["Nebyl poskytnut žádný soubor"] }, status: :unprocessable_entity
+    end
+
+    # Předpokládáme, že files je pole souborů
+    files.each do |file|
+      unless file.content_type.start_with?('image/')
+        return render json: { errors: ["Povolené jsou pouze obrázky"] }, status: :unprocessable_entity
+      end
+      resource.images.attach(file)
+    end
+
+    images = resource.images.map do |img|
+      { id: img.id, url: rails_blob_url(img, only_path: true) }
+    end
+
+    render json: { images: images }, status: :ok
+  end
+
+  def delete_image
+    resource = FamilyMember.find(params[:family_member_id])
+    unless resource.family.account_id == current_account.id
+      return render json: { errors: ["Neoprávněný přístup"] }, status: :forbidden
+    end
+
+    image = resource.images.find_by(id: params[:image_id])
+    if image
+      image.purge
+      head :no_content
+    else
+      render json: { errors: ["Obrázek nenalezen"] }, status: :not_found
+    end
+  end
+
+  def show_images
+    resource = FamilyMember.find(params[:id])
+    unless resource.family.account_id == current_account.id
+      return render json: { errors: ["Neoprávněný přístup"] }, status: :forbidden
+    end
+
+    images = resource.images.map do |img|
+      { id: img.id, url: rails_blob_url(img, only_path: true) }
+    end
+
+    render json: { images: images }, status: :ok
+  end
+
   protected
 
   def create_resource(object, context)

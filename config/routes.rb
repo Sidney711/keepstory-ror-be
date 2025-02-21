@@ -27,7 +27,11 @@ Rails.application.routes.draw do
           delete :delete_profile_picture
           patch :update_signature
           delete :delete_signature
+
+          patch :upload_images
+          get   :show_images
         end
+        delete '/images/:image_id', to: 'family_members#delete_image', as: :delete_image
       end
     end
   end

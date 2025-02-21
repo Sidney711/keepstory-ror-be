@@ -14,6 +14,7 @@ class FamilyMember < ApplicationRecord
 
   has_one_attached :signature
   has_one_attached :profile_picture
+  has_many_attached :images
 
   validates :first_name, presence: true, length: { maximum: 100 }
   validates :last_name, presence: true, length: { maximum: 100 }
