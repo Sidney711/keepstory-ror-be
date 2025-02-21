@@ -54,5 +54,7 @@ class ExportFamilyMemberJob < ApplicationJob
       filename: filename,
       content_type: 'application/pdf'
     )
+
+    ExportMailer.export_member_ready_email(family_member).deliver_later
   end
 end
