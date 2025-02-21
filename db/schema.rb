@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_12_135235) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_20_094704) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -46,6 +46,64 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_12_135235) do
     t.check_constraint "email ~ '^[^,;@ \r\n]+@[^,@; \r\n]+.[^,@; \r\n]+$'::citext", name: "valid_email"
   end
 
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "additional_attributes", force: :cascade do |t|
+    t.bigint "family_member_id", null: false
+    t.string "attribute_name", limit: 150, null: false
+    t.string "short_text", limit: 150
+    t.string "long_text", limit: 2000
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["family_member_id"], name: "index_additional_attributes_on_family_member_id"
+  end
+
+  create_table "educations", force: :cascade do |t|
+    t.bigint "family_member_id", null: false
+    t.string "school_name", limit: 250
+    t.string "address", limit: 250
+    t.string "period", limit: 100
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["family_member_id"], name: "index_educations_on_family_member_id"
+  end
+
+  create_table "employments", force: :cascade do |t|
+    t.bigint "family_member_id", null: false
+    t.string "employer", limit: 250
+    t.string "address", limit: 250
+    t.string "period", limit: 100
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["family_member_id"], name: "index_employments_on_family_member_id"
+  end
+
   create_table "families", force: :cascade do |t|
     t.string "uuid", null: false
     t.bigint "account_id", null: false
@@ -56,14 +114,35 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_12_135235) do
   end
 
   create_table "family_members", force: :cascade do |t|
-    t.string "first_name", null: false
-    t.string "last_name", null: false
+    t.string "first_name", limit: 100, null: false
+    t.string "last_name", limit: 100, null: false
     t.date "date_of_birth"
     t.date "date_of_death"
     t.bigint "family_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "birth_last_name", limit: 100
+    t.string "birth_place", limit: 250
+    t.time "birth_time"
+    t.integer "gender"
+    t.string "religion", limit: 100
+    t.boolean "deceased", default: false
+    t.date "death_date"
+    t.time "death_time"
+    t.string "death_place", limit: 250
+    t.string "cause_of_death", limit: 100
+    t.date "burial_date"
+    t.string "burial_place", limit: 250
+    t.string "internment_place", limit: 250
+    t.bigint "mother_id"
+    t.bigint "father_id"
+    t.string "profession", limit: 1000
+    t.string "hobbies_and_interests", limit: 1000
+    t.string "short_description", limit: 2000
+    t.string "short_message", limit: 2000
     t.index ["family_id"], name: "index_family_members_on_family_id"
+    t.index ["father_id"], name: "index_family_members_on_father_id"
+    t.index ["mother_id"], name: "index_family_members_on_mother_id"
   end
 
   create_table "family_members_stories", id: false, force: :cascade do |t|
@@ -71,6 +150,25 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_12_135235) do
     t.bigint "family_member_id", null: false
     t.index ["family_member_id"], name: "index_family_members_stories_on_family_member_id"
     t.index ["story_id"], name: "index_family_members_stories_on_story_id"
+  end
+
+  create_table "marriages", force: :cascade do |t|
+    t.bigint "first_partner_id", null: false
+    t.bigint "second_partner_id", null: false
+    t.string "period", limit: 100
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["first_partner_id"], name: "index_marriages_on_first_partner_id"
+    t.index ["second_partner_id"], name: "index_marriages_on_second_partner_id"
+  end
+
+  create_table "residence_addresses", force: :cascade do |t|
+    t.bigint "family_member_id", null: false
+    t.string "address", limit: 250
+    t.string "period", limit: 100
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["family_member_id"], name: "index_residence_addresses_on_family_member_id"
   end
 
   create_table "stories", force: :cascade do |t|
@@ -90,7 +188,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_12_135235) do
   add_foreign_key "account_password_reset_keys", "accounts", column: "id"
   add_foreign_key "account_remember_keys", "accounts", column: "id"
   add_foreign_key "account_verification_keys", "accounts", column: "id"
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "additional_attributes", "family_members"
+  add_foreign_key "educations", "family_members"
+  add_foreign_key "employments", "family_members"
   add_foreign_key "families", "accounts"
   add_foreign_key "family_members", "families"
+  add_foreign_key "family_members", "family_members", column: "father_id"
+  add_foreign_key "family_members", "family_members", column: "mother_id"
+  add_foreign_key "marriages", "family_members", column: "first_partner_id"
+  add_foreign_key "marriages", "family_members", column: "second_partner_id"
+  add_foreign_key "residence_addresses", "family_members"
   add_foreign_key "stories", "families"
 end
