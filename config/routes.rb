@@ -30,8 +30,12 @@ Rails.application.routes.draw do
 
           patch :upload_images
           get   :show_images
+
+          patch :upload_documents
+          get   :show_documents
         end
         delete '/images/:image_id', to: 'family_members#delete_image', as: :delete_image
+        delete '/documents/:document_id', to: 'family_members#delete_document', as: :delete_document
       end
     end
   end

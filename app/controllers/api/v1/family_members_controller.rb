@@ -74,7 +74,6 @@ class Api::V1::FamilyMembersController < ApplicationController
       return render json: { errors: ["Nebyl poskytnut žádný soubor"] }, status: :unprocessable_entity
     end
 
-    # Předpokládáme, že files je pole souborů
     files.each do |file|
       unless file.content_type.start_with?('image/')
         return render json: { errors: ["Povolené jsou pouze obrázky"] }, status: :unprocessable_entity
@@ -115,6 +114,61 @@ class Api::V1::FamilyMembersController < ApplicationController
     end
 
     render json: { images: images }, status: :ok
+  end
+
+  def upload_documents
+    resource = FamilyMember.find(params[:id])
+    unless resource.family.account_id == current_account.id
+      return render json: { errors: ["Neoprávněný přístup"] }, status: :forbidden
+    end
+
+    files = params.dig(:data, :attributes, :documents)
+    unless files.present?
+      return render json: { errors: ["Nebyl poskytnut žádný soubor"] }, status: :unprocessable_entity
+    end
+
+    files.each do |file|
+      resource.documents.attach(file)
+    end
+
+    documents = resource.documents.map do |document|
+      {
+        id: document.id,
+        url: rails_blob_url(document, only_path: true),
+        filename: document.filename.to_s,
+        created_at: document.created_at
+      }
+    end
+
+    render json: { documents: documents }, status: :ok
+  end
+
+  def delete_document
+    resource = FamilyMember.find(params[:family_member_id])
+    unless resource.family.account_id == current_account.id
+      return render json: { errors: ["Neoprávněný přístup"] }, status: :forbidden
+    end
+
+    document = resource.documents.find_by(id: params[:document_id])
+    if document
+      document.purge
+      head :no_content
+    else
+      render json: { errors: ["Dokument nenalezen"] }, status: :not_found
+    end
+  end
+
+  def show_documents
+    resource = FamilyMember.find(params[:id])
+    unless resource.family.account_id == current_account.id
+      return render json: { errors: ["Neoprávněný přístup"] }, status: :forbidden
+    end
+
+    documents = resource.documents.map do |document|
+      { id: document.id, url: rails_blob_url(document, only_path: true), filename: document.filename.to_s, created_at: document.created_at }
+    end
+
+    render json: { documents: documents }, status: :ok
   end
 
   protected
