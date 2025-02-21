@@ -37,6 +37,8 @@ Rails.application.routes.draw do
         delete '/images/:image_id', to: 'family_members#delete_image', as: :delete_image
         delete '/documents/:document_id', to: 'family_members#delete_document', as: :delete_document
       end
+
+      post 'export_to_pdf/family_member/:id', to: 'export#family_member'
     end
   end
 end
