@@ -77,7 +77,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_20_094704) do
   create_table "additional_attributes", force: :cascade do |t|
     t.bigint "family_member_id", null: false
     t.string "attribute_name", limit: 150, null: false
-    t.string "short_text", limit: 150
     t.string "long_text", limit: 2000
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
