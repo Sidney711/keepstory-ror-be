@@ -24,7 +24,6 @@ class ExportFamilyMemberJob < ApplicationJob
 
     personal_items = []
     personal_items << "<li><strong>Jméno:</strong> #{family_member.first_name} #{family_member.last_name}</li>"
-
     personal_items << "<li><strong>Rodné příjmení:</strong> #{family_member.birth_last_name}</li>" if family_member.birth_last_name.present?
     personal_items << "<li><strong>Datum narození:</strong> #{family_member.date_of_birth.strftime('%d.%m.%Y')}</li>" if family_member.date_of_birth.present?
     personal_items << "<li><strong>Místo narození:</strong> #{family_member.birth_place}</li>" if family_member.birth_place.present?
@@ -65,7 +64,6 @@ class ExportFamilyMemberJob < ApplicationJob
       death_items << "<li><strong>Datum pohřbu:</strong> #{family_member.burial_date.strftime('%d.%m.%Y')}</li>" if family_member.burial_date.present?
       death_items << "<li><strong>Místo pohřbu:</strong> #{family_member.burial_place}</li>" if family_member.burial_place.present?
       death_items << "<li><strong>Místo internace:</strong> #{family_member.internment_place}</li>" if family_member.internment_place.present?
-
       if death_items.any?
         death_info = <<~HTML
           <h3>Údaje o úmrtí</h3>
@@ -212,6 +210,38 @@ class ExportFamilyMemberJob < ApplicationJob
       gallery_html << "</div>"
     end
 
+    family_tree_svg = <<~SVG
+      <div class='family-tree' style='text-align:center; margin:0px auto;'>
+        <svg width="800" height="300" xmlns="http://www.w3.org/2000/svg">
+          <style>
+            .box { fill: #fff; stroke: #000; stroke-width: 1; }
+            .current { fill: #ffff99; stroke: #000; stroke-width: 2; }
+            .label { font-family: Arial, sans-serif; font-size: 12px; text-anchor: middle; dominant-baseline: central; }
+          </style>
+          <rect x="50" y="0" width="150" height="50" class="box"/>
+          <text x="125" y="25" class="label">#{family_member.mother&.mother ? "#{family_member.mother.mother.first_name} #{family_member.mother.mother.last_name}" : ""}</text>
+          <rect x="250" y="0" width="150" height="50" class="box"/>
+          <text x="325" y="25" class="label">#{family_member.mother&.father ? "#{family_member.mother.father.first_name} #{family_member.mother.father.last_name}" : ""}</text>
+          <rect x="450" y="0" width="150" height="50" class="box"/>
+          <text x="525" y="25" class="label">#{family_member.father&.mother ? "#{family_member.father.mother.first_name} #{family_member.father.mother.last_name}" : ""}</text>
+          <rect x="650" y="0" width="150" height="50" class="box"/>
+          <text x="725" y="25" class="label">#{family_member.father&.father ? "#{family_member.father.father.first_name} #{family_member.father.father.last_name}" : ""}</text>
+          <rect x="150" y="100" width="150" height="50" class="box"/>
+          <text x="225" y="125" class="label">#{family_member.mother ? "#{family_member.mother.first_name} #{family_member.mother.last_name}" : ""}</text>
+          <rect x="550" y="100" width="150" height="50" class="box"/>
+          <text x="625" y="125" class="label">#{family_member.father ? "#{family_member.father.first_name} #{family_member.father.last_name}" : ""}</text>
+          <rect x="350" y="200" width="150" height="50" class="current"/>
+          <text x="425" y="225" class="label">#{family_member.first_name} #{family_member.last_name}</text>
+          <line x1="125" y1="50" x2="225" y2="100" stroke="#000"/>
+          <line x1="325" y1="50" x2="225" y2="100" stroke="#000"/>
+          <line x1="525" y1="50" x2="625" y2="100" stroke="#000"/>
+          <line x1="725" y1="50" x2="625" y2="100" stroke="#000"/>
+          <line x1="225" y1="150" x2="425" y2="200" stroke="#000"/>
+          <line x1="625" y1="150" x2="425" y2="200" stroke="#000"/>
+        </svg>
+      </div>
+    SVG
+
     html = <<~HTML
       <!DOCTYPE html>
       <html>
@@ -311,6 +341,11 @@ class ExportFamilyMemberJob < ApplicationJob
             height: auto;
             display: block;
           }
+          .family-tree {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 30px;
+          }
         </style>
       </head>
       <body>
@@ -322,6 +357,7 @@ class ExportFamilyMemberJob < ApplicationJob
         </div>
         <div class="details">
           #{personal_info}
+          #{family_tree_svg}
           #{death_info}
           #{parent_info}
           #{siblings_html}
