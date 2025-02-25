@@ -64,7 +64,6 @@ gem 'jsonapi-resources', "~> 0.11.0.beta2"
 gem 'net-smtp', '0.5.0'
 
 gem 'wicked_pdf', "~> 2.8.2"
-gem 'wkhtmltopdf-binary', '~> 0.12.6.8'
 
 gem 'aws-sdk-rails', '>= 5.1.0'
 gem 'aws-sdk-ses', '~> 1.80.0'

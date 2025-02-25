@@ -1,6 +1,6 @@
 FROM ruby:3.4.1
 
-RUN apt-get update -qq && apt-get install -y build-essential libpq-dev nano
+RUN apt-get update -qq && apt-get install -y build-essential libpq-dev nano wkhtmltopdf
 
 RUN mkdir /app
 WORKDIR /app
