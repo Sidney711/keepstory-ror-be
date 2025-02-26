@@ -16,6 +16,7 @@ class FamilyMember < ApplicationRecord
   has_one_attached :profile_picture
   has_many_attached :images
   has_many_attached :documents
+  has_many_attached :exports
 
   validates :first_name, presence: true, length: { maximum: 100 }
   validates :last_name, presence: true, length: { maximum: 100 }

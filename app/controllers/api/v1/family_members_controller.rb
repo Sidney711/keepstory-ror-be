@@ -188,16 +188,22 @@ class Api::V1::FamilyMembersController < ApplicationController
     document = resource.documents.find_by(id: params[:document_id])
     if document
       document.purge
-      head :no_content
-    else
-      family = resource.family
-      if family.export_pdf.attached? && family.export_pdf.blob.id.to_s == params[:document_id].to_s
-        family.export_pdf.purge
-        head :no_content
-      else
-        render json: { errors: ["Dokument nenalezen"] }, status: :not_found
-      end
+      return head :no_content
     end
+
+    export_doc = resource.exports.find_by(id: params[:document_id])
+    if export_doc
+      export_doc.purge
+      return head :no_content
+    end
+
+    family_export = resource.family.exports.find_by(id: params[:document_id])
+    if family_export
+      family_export.purge
+      return head :no_content
+    end
+
+    render json: { errors: ["Dokument nenalezen"] }, status: :not_found
   end
 
   def show_documents
@@ -229,18 +235,33 @@ class Api::V1::FamilyMembersController < ApplicationController
         id: document.id,
         url: rails_blob_url(document, only_path: true),
         filename: document.filename.to_s,
-        created_at: document.created_at
+        created_at: document.created_at,
+        type: "uploaded"
       }
     end
 
-    if resource.family.export_pdf.attached?
-      export_pdf = resource.family.export_pdf
-      documents << {
-        id: export_pdf.blob.id,
-        url: rails_blob_url(export_pdf, only_path: true),
-        filename: export_pdf.filename.to_s,
-        created_at: export_pdf.created_at
-      }
+    if resource.exports.attached?
+      resource.exports.each do |export_doc|
+        documents << {
+          id: export_doc.blob.id,
+          url: rails_blob_url(export_doc, only_path: true),
+          filename: export_doc.filename.to_s,
+          created_at: export_doc.created_at,
+          type: "export"
+        }
+      end
+    end
+
+    if resource.family.exports.attached?
+      resource.family.exports.each do |export_doc|
+        documents << {
+          id: export_doc.blob.id,
+          url: rails_blob_url(export_doc, only_path: true),
+          filename: export_doc.filename.to_s,
+          created_at: export_doc.created_at,
+          type: "export"
+        }
+      end
     end
 
     documents

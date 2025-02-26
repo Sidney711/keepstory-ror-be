@@ -379,7 +379,7 @@ class ExportFamilyMemberJob < ApplicationJob
     timestamp = Time.current.strftime('%Y%m%d%H%M%S')
     filename  = "export_clena_rodiny_#{timestamp}.pdf"
     io        = StringIO.new(pdf)
-    family_member.documents.attach(
+    family_member.exports.attach(
       io: io,
       filename: filename,
       content_type: 'application/pdf'

@@ -54,7 +54,7 @@ class ExportFamilyTreeJob < ApplicationJob
     timestamp = Time.current.strftime('%Y%m%d%H%M%S')
     filename  = "rodokmen_clena_rodiny_#{timestamp}.pdf"
     io = StringIO.new(pdf)
-    @target.documents.attach(
+    @target.exports.attach(
       io: io,
       filename: filename,
       content_type: 'application/pdf'
