@@ -16,7 +16,17 @@ class Api::V1::FamilyMembersController < ApplicationController
   def update_profile_picture
     resource = FamilyMember.find(params[:id])
     file = params.dig(:data, :attributes, :profile_picture)
+
     if file.present?
+      if file.size > 300.megabytes
+        render json: { errors: ["Profile picture must be less than 300 MB"] }, status: :unprocessable_entity and return
+      end
+
+      allowed_types = ["image/jpeg", "image/png", "image/gif"]
+      unless allowed_types.include?(file.content_type)
+        render json: { errors: ["Only image files (JPEG, PNG, GIF) are allowed"] }, status: :unprocessable_entity and return
+      end
+
       resource.profile_picture.attach(file)
       if resource.profile_picture.attached?
         render json: { profile_picture_url: rails_blob_url(resource.profile_picture, only_path: true) }, status: :ok
@@ -41,7 +51,17 @@ class Api::V1::FamilyMembersController < ApplicationController
   def update_signature
     resource = FamilyMember.find(params[:id])
     file = params.dig(:data, :attributes, :signature)
+
     if file.present?
+      if file.size > 300.megabytes
+        render json: { errors: ["Signature must be less than 300 MB"] }, status: :unprocessable_entity and return
+      end
+
+      allowed_types = ["image/jpeg", "image/png", "image/gif"]
+      unless allowed_types.include?(file.content_type)
+        render json: { errors: ["Only image files (JPEG, PNG, GIF) are allowed for signature"] }, status: :unprocessable_entity and return
+      end
+
       resource.signature.attach(file)
       if resource.signature.attached?
         render json: { signature_url: rails_blob_url(resource.signature, only_path: true) }, status: :ok
@@ -78,7 +98,15 @@ class Api::V1::FamilyMembersController < ApplicationController
       unless file.content_type.start_with?('image/')
         return render json: { errors: ["Povolené jsou pouze obrázky"] }, status: :unprocessable_entity
       end
-      resource.images.attach(file)
+      if file.size > 300.megabytes
+        return render json: { errors: ["Každý obrázek musí být menší než 300 MB"] }, status: :unprocessable_entity
+      end
+    end
+
+    ActiveRecord::Base.transaction do
+      files.each do |file|
+        resource.images.attach(file)
+      end
     end
 
     images = resource.images.map do |img|
@@ -128,7 +156,15 @@ class Api::V1::FamilyMembersController < ApplicationController
     end
 
     files.each do |file|
-      resource.documents.attach(file)
+      if file.size > 10.gigabytes
+        return render json: { errors: ["Každý dokument musí být menší než 10 GB"] }, status: :unprocessable_entity
+      end
+    end
+
+    ActiveRecord::Base.transaction do
+      files.each do |file|
+        resource.documents.attach(file)
+      end
     end
 
     documents = resource.documents.map do |document|
