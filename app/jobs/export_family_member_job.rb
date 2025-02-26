@@ -247,7 +247,7 @@ class ExportFamilyMemberJob < ApplicationJob
       <html>
       <head>
         <meta charset="utf-8">
-        <title>Rodinná kniha: #{family_member.first_name} #{family_member.last_name}</title>
+        <title>Rodinná kniha</title>
         <style>
           @page { margin: 40px; size: A4; }
           body {
