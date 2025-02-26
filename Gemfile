@@ -67,3 +67,5 @@ gem 'wicked_pdf', "~> 2.8.2"
 
 gem 'aws-sdk-rails', '>= 5.1.0'
 gem 'aws-sdk-ses', '~> 1.80.0'
+
+gem 'ruby-graphviz', '~> 1.2.5'

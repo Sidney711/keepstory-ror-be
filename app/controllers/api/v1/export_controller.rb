@@ -13,4 +13,11 @@ class Api::V1::ExportController < ApplicationController
     ExportFamilyJob.perform_later(current_family.id)
     render json: { message: "Export PDF byl zařazen do fronty." }, status: :accepted
   end
+
+  def family_tree
+    current_family = Family.where(account_id: current_account.id).first
+    family_member = FamilyMember.find_by(id: params[:id], family_id: current_family.id)
+    ExportFamilyTreeJob.perform_later(family_member.id)
+    render json: { message: "Export PDF byl zařazen do fronty." }, status: :accepted
+  end
 end
