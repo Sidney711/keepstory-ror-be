@@ -377,7 +377,7 @@ class ExportFamilyMemberJob < ApplicationJob
 
     pdf       = WickedPdf.new.pdf_from_string(html)
     timestamp = Time.current.strftime('%Y%m%d%H%M%S')
-    filename  = "family_member_#{family_member.id}_#{timestamp}.pdf"
+    filename  = "export_clena_rodiny_#{timestamp}.pdf"
     io        = StringIO.new(pdf)
     family_member.documents.attach(
       io: io,
