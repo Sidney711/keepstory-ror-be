@@ -1,4 +1,4 @@
-class ExportFamilyJob < ApplicationJob
+class ExportFamilyCsJob < ApplicationJob
   queue_as :default
 
   def perform(family_id)
@@ -132,7 +132,7 @@ class ExportFamilyJob < ApplicationJob
       filename: filename,
       content_type: 'application/pdf'
     )
-    ExportMailer.export_family_ready_email(family).deliver_later
+    ExportMailer.export_family_ready_cs_email(family).deliver_later
   end
 
   private

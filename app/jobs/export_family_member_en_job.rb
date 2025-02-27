@@ -1,4 +1,4 @@
-class ExportFamilyMemberJob < ApplicationJob
+class ExportFamilyMemberEnJob < ApplicationJob
   queue_as :default
 
   def perform(family_member_id)
@@ -23,29 +23,29 @@ class ExportFamilyMemberJob < ApplicationJob
     end
 
     personal_items = []
-    personal_items << "<li><strong>Jméno:</strong> #{family_member.first_name} #{family_member.last_name}</li>"
-    personal_items << "<li><strong>Rodné příjmení:</strong> #{family_member.birth_last_name}</li>" if family_member.birth_last_name.present?
-    personal_items << "<li><strong>Datum narození:</strong> #{family_member.date_of_birth.strftime('%d.%m.%Y')}</li>" if family_member.date_of_birth.present?
-    personal_items << "<li><strong>Místo narození:</strong> #{family_member.birth_place}</li>" if family_member.birth_place.present?
-    personal_items << "<li><strong>Čas narození:</strong> #{family_member.birth_time.strftime('%H:%M')}</li>" if family_member.birth_time.present?
+    personal_items << "<li><strong>Name:</strong> #{family_member.first_name} #{family_member.last_name}</li>"
+    personal_items << "<li><strong>Birth Surname:</strong> #{family_member.birth_last_name}</li>" if family_member.birth_last_name.present?
+    personal_items << "<li><strong>Date of Birth:</strong> #{family_member.date_of_birth.strftime('%d.%m.%Y')}</li>" if family_member.date_of_birth.present?
+    personal_items << "<li><strong>Place of Birth:</strong> #{family_member.birth_place}</li>" if family_member.birth_place.present?
+    personal_items << "<li><strong>Time of Birth:</strong> #{family_member.birth_time.strftime('%H:%M')}</li>" if family_member.birth_time.present?
     if family_member.gender.present?
       gender_text = case family_member.gender
-                    when "male" then "Muž"
-                    when "female" then "Žena"
-                    else "Ostatní"
+                    when "male" then "Male"
+                    when "female" then "Female"
+                    else "Other"
                     end
-      personal_items << "<li><strong>Pohlaví:</strong> #{gender_text}</li>"
+      personal_items << "<li><strong>Gender:</strong> #{gender_text}</li>"
     end
-    personal_items << "<li><strong>Víra:</strong> #{family_member.religion}</li>" if family_member.religion.present?
-    personal_items << "<li><strong>Povolání:</strong> #{family_member.profession}</li>" if family_member.profession.present?
-    personal_items << "<li><strong>Zájmy:</strong> #{family_member.hobbies_and_interests}</li>" if family_member.hobbies_and_interests.present?
-    personal_items << "<li><strong>Popis:</strong> #{family_member.short_description}</li>" if family_member.short_description.present?
-    personal_items << "<li><strong>Zpráva:</strong> #{family_member.short_message}</li>" if family_member.short_message.present?
+    personal_items << "<li><strong>Religion:</strong> #{family_member.religion}</li>" if family_member.religion.present?
+    personal_items << "<li><strong>Profession:</strong> #{family_member.profession}</li>" if family_member.profession.present?
+    personal_items << "<li><strong>Hobbies:</strong> #{family_member.hobbies_and_interests}</li>" if family_member.hobbies_and_interests.present?
+    personal_items << "<li><strong>Description:</strong> #{family_member.short_description}</li>" if family_member.short_description.present?
+    personal_items << "<li><strong>Message:</strong> #{family_member.short_message}</li>" if family_member.short_message.present?
 
     personal_info = ""
     if personal_items.any?
       personal_info = <<~HTML
-        <h3>Osobní informace</h3>
+        <h3>Personal Information</h3>
         #{profile_picture_tag}
         <ul>
           #{personal_items.join("\n")}
@@ -57,16 +57,16 @@ class ExportFamilyMemberJob < ApplicationJob
     death_info = ""
     if family_member.deceased
       death_items = []
-      death_items << "<li><strong>Datum úmrtí:</strong> #{family_member.date_of_death.strftime('%d.%m.%Y')}</li>" if family_member.date_of_death.present?
-      death_items << "<li><strong>Čas úmrtí:</strong> #{family_member.death_time.strftime('%H:%M')}</li>" if family_member.death_time.present?
-      death_items << "<li><strong>Místo úmrtí:</strong> #{family_member.death_place}</li>" if family_member.death_place.present?
-      death_items << "<li><strong>Příčina úmrtí:</strong> #{family_member.cause_of_death}</li>" if family_member.cause_of_death.present?
-      death_items << "<li><strong>Datum pohřbu:</strong> #{family_member.burial_date.strftime('%d.%m.%Y')}</li>" if family_member.burial_date.present?
-      death_items << "<li><strong>Místo pohřbu:</strong> #{family_member.burial_place}</li>" if family_member.burial_place.present?
-      death_items << "<li><strong>Místo internace:</strong> #{family_member.internment_place}</li>" if family_member.internment_place.present?
+      death_items << "<li><strong>Date of Death:</strong> #{family_member.date_of_death.strftime('%d.%m.%Y')}</li>" if family_member.date_of_death.present?
+      death_items << "<li><strong>Time of Death:</strong> #{family_member.death_time.strftime('%H:%M')}</li>" if family_member.death_time.present?
+      death_items << "<li><strong>Place of Death:</strong> #{family_member.death_place}</li>" if family_member.death_place.present?
+      death_items << "<li><strong>Cause of Death:</strong> #{family_member.cause_of_death}</li>" if family_member.cause_of_death.present?
+      death_items << "<li><strong>Date of Burial:</strong> #{family_member.burial_date.strftime('%d.%m.%Y')}</li>" if family_member.burial_date.present?
+      death_items << "<li><strong>Place of Burial:</strong> #{family_member.burial_place}</li>" if family_member.burial_place.present?
+      death_items << "<li><strong>Place of Interment:</strong> #{family_member.internment_place}</li>" if family_member.internment_place.present?
       if death_items.any?
         death_info = <<~HTML
-          <h3>Údaje o úmrtí</h3>
+          <h3>Death Details</h3>
           <ul>
             #{death_items.join("\n")}
           </ul>
@@ -77,13 +77,13 @@ class ExportFamilyMemberJob < ApplicationJob
     parent_info = ""
     if family_member.father.present?
       parent_info += <<~HTML
-        <h3>Otec</h3>
+        <h3>Father</h3>
         <p>#{family_member.father.first_name} #{family_member.father.last_name}</p>
       HTML
     end
     if family_member.mother.present?
       parent_info += <<~HTML
-        <h3>Matka</h3>
+        <h3>Mother</h3>
         <p>#{family_member.mother.first_name} #{family_member.mother.last_name}</p>
       HTML
     end
@@ -100,10 +100,10 @@ class ExportFamilyMemberJob < ApplicationJob
 
     siblings_html = ""
     if siblings.any?
-      siblings_html = "<h3>Sourozenci</h3>" + siblings.map do |sibling|
+      siblings_html = "<h3>Siblings</h3>" + siblings.map do |sibling|
         li_date = sibling.date_of_birth.present? ? sibling.date_of_birth.strftime('%d.%m.%Y') : nil
-        content = "<p><strong>Jméno:</strong> #{sibling.first_name} #{sibling.last_name}</p>"
-        content << "<p><strong>Datum narození:</strong> #{li_date}</p>" if li_date
+        content = "<p><strong>Name:</strong> #{sibling.first_name} #{sibling.last_name}</p>"
+        content << "<p><strong>Date of Birth:</strong> #{li_date}</p>" if li_date
         "<div class='card'>#{content}</div>"
       end.join
     end
@@ -116,10 +116,10 @@ class ExportFamilyMemberJob < ApplicationJob
 
     grandparents_html = ""
     if grandparents.any?
-      grandparents_html = "<h3>Prarodiče</h3>" + grandparents.map do |grandparent|
+      grandparents_html = "<h3>Grandparents</h3>" + grandparents.map do |grandparent|
         li_date = grandparent.date_of_birth.present? ? grandparent.date_of_birth.strftime('%d.%m.%Y') : nil
-        content = "<p><strong>Jméno:</strong> #{grandparent.first_name} #{grandparent.last_name}</p>"
-        content << "<p><strong>Datum narození:</strong> #{li_date}</p>" if li_date
+        content = "<p><strong>Name:</strong> #{grandparent.first_name} #{grandparent.last_name}</p>"
+        content << "<p><strong>Date of Birth:</strong> #{li_date}</p>" if li_date
         "<div class='card'>#{content}</div>"
       end.join
     end
@@ -127,49 +127,49 @@ class ExportFamilyMemberJob < ApplicationJob
     children = family_member.children
     children_html = ""
     if children.any?
-      children_html = "<h3>Potomci</h3>" + children.map do |child|
+      children_html = "<h3>Children</h3>" + children.map do |child|
         li_date = child.date_of_birth.present? ? child.date_of_birth.strftime('%d.%m.%Y') : nil
-        content = "<p><strong>Jméno:</strong> #{child.first_name} #{child.last_name}</p>"
-        content << "<p><strong>Datum narození:</strong> #{li_date}</p>" if li_date
+        content = "<p><strong>Name:</strong> #{child.first_name} #{child.last_name}</p>"
+        content << "<p><strong>Date of Birth:</strong> #{li_date}</p>" if li_date
         "<div class='card'>#{content}</div>"
       end.join
     end
 
     educations_html = ""
     if educations.any?
-      educations_html = "<h3>Vzdělání</h3>" + educations.map do |edu|
+      educations_html = "<h3>Education</h3>" + educations.map do |edu|
         content = ""
-        content << "<p><strong>Škola:</strong> #{edu.school_name}</p>" if edu.school_name.present?
-        content << "<p><strong>Adresa:</strong> #{edu.address}</p>" if edu.address.present?
-        content << "<p><strong>Období:</strong> #{edu.period}</p>" if edu.period.present?
+        content << "<p><strong>School:</strong> #{edu.school_name}</p>" if edu.school_name.present?
+        content << "<p><strong>Address:</strong> #{edu.address}</p>" if edu.address.present?
+        content << "<p><strong>Period:</strong> #{edu.period}</p>" if edu.period.present?
         "<div class='card'>#{content}</div>" if content.present?
       end.join
     end
 
     employments_html = ""
     if employments.any?
-      employments_html = "<h3>Zaměstnání</h3>" + employments.map do |emp|
+      employments_html = "<h3>Employment</h3>" + employments.map do |emp|
         content = ""
-        content << "<p><strong>Zaměstnavatel:</strong> #{emp.employer}</p>" if emp.employer.present?
-        content << "<p><strong>Adresa:</strong> #{emp.address}</p>" if emp.address.present?
-        content << "<p><strong>Období:</strong> #{emp.period}</p>" if emp.period.present?
+        content << "<p><strong>Employer:</strong> #{emp.employer}</p>" if emp.employer.present?
+        content << "<p><strong>Address:</strong> #{emp.address}</p>" if emp.address.present?
+        content << "<p><strong>Period:</strong> #{emp.period}</p>" if emp.period.present?
         "<div class='card'>#{content}</div>" if content.present?
       end.join
     end
 
     residences_html = ""
     if residences.any?
-      residences_html = "<h3>Adresa bydliště</h3>" + residences.map do |res|
+      residences_html = "<h3>Residence Address</h3>" + residences.map do |res|
         content = ""
-        content << "<p><strong>Adresa:</strong> #{res.address}</p>" if res.address.present?
-        content << "<p><strong>Období:</strong> #{res.period}</p>" if res.period.present?
+        content << "<p><strong>Address:</strong> #{res.address}</p>" if res.address.present?
+        content << "<p><strong>Period:</strong> #{res.period}</p>" if res.period.present?
         "<div class='card'>#{content}</div>" if content.present?
       end.join
     end
 
     additional_attrs_html = ""
     if additional_attrs.any?
-      additional_attrs_html = "<h3>Další informace</h3>" + additional_attrs.map do |attr|
+      additional_attrs_html = "<h3>Additional Information</h3>" + additional_attrs.map do |attr|
         if attr.attribute_name.present? && attr.long_text.present?
           "<div class='card'><p><strong>#{attr.attribute_name}:</strong> #{attr.long_text}</p></div>"
         end
@@ -178,12 +178,12 @@ class ExportFamilyMemberJob < ApplicationJob
 
     marriages_html = ""
     if marriages.any?
-      marriages_html = "<h3>Manželství</h3>" + marriages.map do |m|
+      marriages_html = "<h3>Marriages</h3>" + marriages.map do |m|
         partner = m.first_partner_id == family_member.id ? m.second_partner : m.first_partner
         if partner.present? && partner.first_name.present? && partner.last_name.present?
           "<div class='card'>
              <p><strong>Partner:</strong> #{partner.first_name} #{partner.last_name}</p>
-             #{"<p><strong>Období:</strong> #{m.period}</p>" if m.period.present?}
+             #{"<p><strong>Period:</strong> #{m.period}</p>" if m.period.present?}
            </div>"
         end
       end.join
@@ -191,7 +191,7 @@ class ExportFamilyMemberJob < ApplicationJob
 
     stories_html = ""
     if stories.any?
-      stories_html = "<div class='gallery-h'><h3>Příběhy</h3></div><div class='stories-section'>" + stories.map do |story|
+      stories_html = "<div class='gallery-h'><h3>Stories</h3></div><div class='stories-section'>" + stories.map do |story|
         date_info = story.story_date.present? ? story.story_date.strftime('%d.%m.%Y') : (story.story_year.to_s if story.story_year.present?)
         "<div class='story'>
            <h3 class='story-title'><strong>#{story.title}</strong> #{"(#{date_info})" if date_info}</h3>
@@ -202,7 +202,7 @@ class ExportFamilyMemberJob < ApplicationJob
 
     gallery_html = ""
     if family_member.images.attached?
-      gallery_html = "<div class='gallery-h'><h3>Galerie</h3></div><div class='gallery'>"
+      gallery_html = "<div class='gallery-h'><h3>Gallery</h3></div><div class='gallery'>"
       family_member.images.each do |image|
         img_data = Base64.strict_encode64(image.download)
         gallery_html << "<div class='gallery-item'><img src='data:#{image.content_type};base64,#{img_data}' alt='Gallery Image' /></div>"
@@ -247,7 +247,7 @@ class ExportFamilyMemberJob < ApplicationJob
       <html>
       <head>
         <meta charset="utf-8">
-        <title>Rodinná kniha</title>
+        <title>Family Book</title>
         <style>
           @page { margin: 40px; size: A4; }
           body {
@@ -351,7 +351,7 @@ class ExportFamilyMemberJob < ApplicationJob
       <body>
         <div class="cover">
           <div>
-            <h1>Paměti osoby</h1>
+            <h1>Personal Memories</h1>
             <h2>#{family_member.first_name} #{family_member.last_name}</h2>
           </div>
         </div>
@@ -377,13 +377,13 @@ class ExportFamilyMemberJob < ApplicationJob
 
     pdf       = WickedPdf.new.pdf_from_string(html)
     timestamp = Time.current.strftime('%Y%m%d%H%M%S')
-    filename  = "export_clena_rodiny_#{timestamp}.pdf"
+    filename  = "export_family_member_#{timestamp}.pdf"
     io        = StringIO.new(pdf)
     family_member.exports.attach(
       io: io,
       filename: filename,
       content_type: 'application/pdf'
     )
-    ExportMailer.export_member_ready_email(family_member).deliver_later
+    ExportMailer.export_member_ready_en_email(family_member).deliver_later
   end
 end

@@ -3,7 +3,7 @@ class ExportFamilyTreeJob < ApplicationJob
 
   LEVELS = 6
 
-  def perform(family_member_id)
+  def perform(family_member_id, language)
     @target = FamilyMember.find(family_member_id)
 
     levels = build_tree_levels(@target, LEVELS)
@@ -51,15 +51,28 @@ class ExportFamilyTreeJob < ApplicationJob
       orientation: 'Landscape',
       margin: { top: 40, bottom: 40, left: 40, right: 40 }
     )
-    timestamp = Time.current.strftime('%Y%m%d%H%M%S')
-    filename  = "rodokmen_clena_rodiny_#{timestamp}.pdf"
-    io = StringIO.new(pdf)
-    @target.exports.attach(
-      io: io,
-      filename: filename,
-      content_type: 'application/pdf'
-    )
-    ExportMailer.export_member_ready_email(@target).deliver_later
+
+    if language == "cs"
+      timestamp = Time.current.strftime('%Y%m%d%H%M%S')
+      filename  = "rodokmen_clena_rodiny_#{timestamp}.pdf"
+      io = StringIO.new(pdf)
+      @target.exports.attach(
+        io: io,
+        filename: filename,
+        content_type: 'application/pdf'
+      )
+      ExportMailer.export_family_tree_ready_cs_email(@target).deliver_later
+    else
+      timestamp = Time.current.strftime('%Y%m%d%H%M%S')
+      filename  = "family_tree_of_family_member_#{timestamp}.pdf"
+      io = StringIO.new(pdf)
+      @target.exports.attach(
+        io: io,
+        filename: filename,
+        content_type: 'application/pdf'
+      )
+      ExportMailer.export_family_tree_ready_en_email(@target).deliver_later
+    end
   end
 
   private
