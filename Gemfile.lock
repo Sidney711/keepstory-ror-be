@@ -265,6 +265,7 @@ GEM
     regexp_parser (2.10.0)
     reline (0.6.0)
       io-console (~> 0.5)
+    rexml (3.4.1)
     roda (3.88.0)
       rack
     rodauth (2.38.0)
@@ -322,6 +323,8 @@ GEM
       rubocop-minitest
       rubocop-performance
       rubocop-rails
+    ruby-graphviz (1.2.5)
+      rexml
     ruby-progressbar (1.13.0)
     securerandom (0.4.1)
     sequel (5.89.0)
@@ -376,7 +379,6 @@ GEM
     wicked_pdf (2.8.2)
       activesupport
       ostruct
-    wkhtmltopdf-binary (0.12.6.8)
     zeitwerk (2.7.1)
 
 PLATFORMS
@@ -409,6 +411,7 @@ DEPENDENCIES
   rodauth-rails (~> 2.0.2)
   rspec-rails (~> 7.1.1)
   rubocop-rails-omakase
+  ruby-graphviz (~> 1.2.5)
   sequel-activerecord_connection (~> 2.0)
   solid_cable
   solid_cache
@@ -417,7 +420,6 @@ DEPENDENCIES
   tilt (~> 2.4)
   tzinfo-data
   wicked_pdf (~> 2.8.2)
-  wkhtmltopdf-binary (~> 0.12.6.8)
 
 BUNDLED WITH
    2.6.2
