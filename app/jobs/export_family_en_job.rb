@@ -336,38 +336,6 @@ class ExportFamilyEnJob < ApplicationJob
       gallery_html << "</div>"
     end
 
-    family_tree_svg = <<~SVG
-      <div class='family-tree'>
-        <svg width="800" height="300" xmlns="http://www.w3.org/2000/svg">
-          <style>
-            .box { fill: #fff; stroke: #000; stroke-width: 1; }
-            .current { fill: #ffff99; stroke: #000; stroke-width: 2; }
-            .label { font-family: Arial, sans-serif; font-size: 12px; text-anchor: middle; dominant-baseline: central; }
-          </style>
-          <rect x="50" y="0" width="150" height="50" class="box"/>
-          <text x="125" y="25" class="label">#{member.mother&.mother ? "#{member.mother.mother.first_name} #{member.mother.mother.last_name}" : ""}</text>
-          <rect x="250" y="0" width="150" height="50" class="box"/>
-          <text x="325" y="25" class="label">#{member.mother&.father ? "#{member.mother.father.first_name} #{member.mother.father.last_name}" : ""}</text>
-          <rect x="450" y="0" width="150" height="50" class="box"/>
-          <text x="525" y="25" class="label">#{member.father&.mother ? "#{member.father.mother.first_name} #{member.father.mother.last_name}" : ""}</text>
-          <rect x="650" y="0" width="150" height="50" class="box"/>
-          <text x="725" y="25" class="label">#{member.father&.father ? "#{member.father.father.first_name} #{member.father.father.last_name}" : ""}</text>
-          <rect x="150" y="100" width="150" height="50" class="box"/>
-          <text x="225" y="125" class="label">#{member.mother ? "#{member.mother.first_name} #{member.mother.last_name}" : ""}</text>
-          <rect x="550" y="100" width="150" height="50" class="box"/>
-          <text x="625" y="125" class="label">#{member.father ? "#{member.father.first_name} #{member.father.last_name}" : ""}</text>
-          <rect x="350" y="200" width="150" height="50" class="current"/>
-          <text x="425" y="225" class="label">#{member.first_name} #{member.last_name}</text>
-          <line x1="125" y1="50" x2="225" y2="100" stroke="#000"/>
-          <line x1="325" y1="50" x2="225" y2="100" stroke="#000"/>
-          <line x1="525" y1="50" x2="625" y2="100" stroke="#000"/>
-          <line x1="725" y1="50" x2="625" y2="100" stroke="#000"/>
-          <line x1="225" y1="150" x2="425" y2="200" stroke="#000"/>
-          <line x1="625" y1="150" x2="425" y2="200" stroke="#000"/>
-        </svg>
-      </div>
-    SVG
-
     cover_html = <<~HTML
       <div class="cover">
         <div>
@@ -382,7 +350,6 @@ class ExportFamilyEnJob < ApplicationJob
     details_html = <<~HTML
       <div class="details">
         #{personal_info}
-        #{family_tree_svg}
         #{death_info}
         #{parent_info}
         #{siblings_html}
