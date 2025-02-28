@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_20_094704) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_28_152929) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -126,7 +126,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_20_094704) do
     t.integer "gender"
     t.string "religion", limit: 100
     t.boolean "deceased", default: false
-    t.date "death_date"
     t.time "death_time"
     t.string "death_place", limit: 250
     t.string "cause_of_death", limit: 100

@@ -11,7 +11,6 @@ module Api
                  :gender,
                  :religion,
                  :deceased,
-                 :death_date,
                  :death_time,
                  :death_place,
                  :cause_of_death,
