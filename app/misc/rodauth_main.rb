@@ -81,7 +81,7 @@ class RodauthMain < Rodauth::Rails::Auth
     # reset_password_autologin? true
 
     # Delete the account record when the user has closed their account.
-    # delete_account_on_close? true
+    delete_account_on_close? true
 
     # Redirect to the app from login and registration pages if already logged in.
     # already_logged_in { redirect login_redirect }
@@ -147,6 +147,9 @@ class RodauthMain < Rodauth::Rails::Auth
     # after_close_account do
     #   Profile.find_by!(account_id: account_id).destroy
     # end
+    after_close_account do
+      Family.where(account_id: account_id).destroy_all
+    end
 
     # ==> Deadlines
     # Change default deadlines for some actions.

@@ -1,13 +1,16 @@
 class FamilyMember < ApplicationRecord
   belongs_to :family
-  has_and_belongs_to_many :stories
 
   has_many :educations, dependent: :destroy
   has_many :employments, dependent: :destroy
   has_many :residence_addresses, dependent: :destroy
   has_many :additional_attributes, dependent: :destroy
+  has_many :family_members_stories, class_name: "FamilyMembersStory", dependent: :delete_all
+  has_many :stories, through: :family_members_stories
   has_many :marriages_as_first_partner, class_name: "Marriage", foreign_key: "first_partner_id", dependent: :destroy
   has_many :marriages_as_second_partner, class_name: "Marriage", foreign_key: "second_partner_id", dependent: :destroy
+  has_many :children_as_mother, class_name: "FamilyMember", foreign_key: "mother_id", dependent: :nullify
+  has_many :children_as_father, class_name: "FamilyMember", foreign_key: "father_id", dependent: :nullify
 
   belongs_to :mother, class_name: "FamilyMember", optional: true
   belongs_to :father, class_name: "FamilyMember", optional: true
@@ -17,6 +20,10 @@ class FamilyMember < ApplicationRecord
   has_many_attached :images
   has_many_attached :documents
   has_many_attached :exports
+
+  after_destroy_commit :purge_active_storage_attachments
+  before_destroy :store_associated_stories
+  after_destroy :cleanup_orphan_stories
 
   validates :first_name, presence: true, length: { maximum: 100 }
   validates :last_name, presence: true, length: { maximum: 100 }
@@ -208,6 +215,14 @@ class FamilyMember < ApplicationRecord
 
   private
 
+  def purge_active_storage_attachments
+    signature.purge_later if signature.attached?
+    profile_picture.purge_later if profile_picture.attached?
+    images.each { |img| img.purge_later }
+    documents.each { |doc| doc.purge_later }
+    exports.each { |exp| exp.purge_later }
+  end
+
   def birth_date_cannot_be_in_future
     if date_of_birth.present? && date_of_birth > Date.today
       errors.add(:date_of_birth, "cannot be in the future")
@@ -223,6 +238,16 @@ class FamilyMember < ApplicationRecord
   def death_date_after_birth_date
     if date_of_birth.present? && date_of_death.present? && date_of_death < date_of_birth
       errors.add(:date_of_death, "cannot be before birth date")
+    end
+  end
+
+  def store_associated_stories
+    @associated_stories = stories.to_a
+  end
+
+  def cleanup_orphan_stories
+    @associated_stories.each do |story|
+      story.destroy if story.family_members.empty?
     end
   end
 end
