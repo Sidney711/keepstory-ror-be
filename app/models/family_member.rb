@@ -22,7 +22,7 @@ class FamilyMember < ApplicationRecord
   has_many_attached :exports
 
   after_destroy_commit :purge_active_storage_attachments
-  before_destroy :store_associated_stories
+  before_destroy :store_associated_stories, prepend: true
   after_destroy :cleanup_orphan_stories
 
   validates :first_name, presence: true, length: { maximum: 100 }
