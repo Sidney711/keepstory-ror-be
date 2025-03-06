@@ -32,6 +32,8 @@ module Api
                  :signature_url,
                  :additional_attribute_details
 
+      paginator :paged
+
       has_many :stories, inverse: :family_members
       has_many :educations
       has_many :employments
@@ -42,6 +44,20 @@ module Api
 
       has_one :mother, class_name: 'FamilyMember'
       has_one :father, class_name: 'FamilyMember'
+
+      def self.default_page_size
+        12
+      end
+
+      def self.maximum_page_size
+        12
+      end
+
+      def meta(options)
+        paginator = options[:paginator]
+        total_pages = paginator ? paginator.total_pages : 1
+        { total_pages: total_pages }
+      end
 
       def profile_picture_url
         url_helpers = context[:url_helpers] || Rails.application.routes.url_helpers
