@@ -32,6 +32,7 @@ module Api
                  :signature_url,
                  :additional_attribute_details
 
+      filters :search
       paginator :paged
 
       has_many :stories, inverse: :family_members
@@ -96,6 +97,29 @@ module Api
           FamilyMember.where(family_id: current_family.id)
         else
           FamilyMember.none
+        end
+      end
+
+      def self.apply_filter(records, filter, value, options)
+        if filter.to_s == "search"
+          search_term = value&.first&.strip
+          if search_term&.include?(" ")
+            parts = search_term.split(/\s+/)
+            first_part = parts.first
+            last_part  = parts.last
+            records.where(
+              "(family_members.first_name ILIKE ? AND family_members.last_name ILIKE ?) OR (family_members.first_name ILIKE ? AND family_members.last_name ILIKE ?)",
+              "%#{first_part}%", "%#{last_part}%",
+              "%#{last_part}%", "%#{first_part}%"
+            )
+          else
+            records.where(
+              "family_members.first_name ILIKE ? OR family_members.last_name ILIKE ?",
+              "%#{search_term}%", "%#{search_term}%"
+            )
+          end
+        else
+          super(records, filter, value, options)
         end
       end
     end
