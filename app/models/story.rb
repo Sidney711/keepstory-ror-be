@@ -1,6 +1,6 @@
 class Story < ApplicationRecord
   belongs_to :family
-  has_many :family_members_stories, class_name: "FamilyMembersStory", dependent: :destroy
+  has_many :family_members_stories, class_name: "FamilyMembersStory", dependent: :delete_all
   has_many :family_members, through: :family_members_stories
 
   validates :title, presence: true
