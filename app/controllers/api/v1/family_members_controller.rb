@@ -268,6 +268,6 @@ class Api::V1::FamilyMembersController < ApplicationController
   end
 
   def resource_params
-    params.require(:data).require(:attributes).permit(:first_name, :last_name, :date_of_birth, :date_of_death)
+    params.require(:data).require(:attributes).permit(:first_name, :last_name, :date_of_birth, :date_of_death, :deceased)
   end
 end
