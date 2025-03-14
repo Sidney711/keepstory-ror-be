@@ -32,7 +32,7 @@ class FamilyMember < ApplicationRecord
   validates :religion, :cause_of_death, length: { maximum: 100 }, allow_blank: true
   validates :profession, :hobbies_and_interests, length: { maximum: 1000 }, allow_blank: true
   validates :short_description, :short_message, length: { maximum: 2000 }, allow_blank: true
-  validates :deceased, inclusion: { in: [true, false] }, presence: true
+  validates :deceased, inclusion: { in: [true, false] }
 
   enum :gender, { male: 1, female: 2, other: 3 }
 
