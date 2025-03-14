@@ -6,7 +6,7 @@ class Story < ApplicationRecord
   validates :title, presence: true, length: { maximum: 255 }
   validates :content, presence: true
   validates :date_type, inclusion: { in: ['exact', 'year'] }
-  validates :is_date_approx, inclusion: { in: [true, false] }, presence: true
+  validates :is_date_approx, inclusion: { in: [true, false] }
 
   before_validation :clear_opposite_date_field
 
@@ -30,12 +30,14 @@ class Story < ApplicationRecord
   end
 
   def year_format
-    if story_year < 0
-      errors.add(:story_year, "can't be negative")
-    end
+    if story_year.present?
+      if story_year < 0
+        errors.add(:story_year, "can't be negative")
+      end
 
-    if story_year > Date.today.year
-      errors.add(:story_year, "can't be in the future")
+      if story_year > Date.today.year
+        errors.add(:story_year, "can't be in the future")
+      end
     end
   end
 end
