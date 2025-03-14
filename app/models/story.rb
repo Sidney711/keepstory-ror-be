@@ -12,6 +12,7 @@ class Story < ApplicationRecord
 
   validate :date_is_not_in_future
   validate :year_format
+  validate :has_at_least_one_family_member
 
   private
 
@@ -38,6 +39,12 @@ class Story < ApplicationRecord
       if story_year > Date.today.year
         errors.add(:story_year, "can't be in the future")
       end
+    end
+  end
+
+  def has_at_least_one_family_member
+    if family_members.empty?
+      errors.add(:base, "Story must have at least one family member")
     end
   end
 end
