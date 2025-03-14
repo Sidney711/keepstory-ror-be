@@ -13,6 +13,29 @@ class Api::V1::FamilyMembersController < ApplicationController
     end
   end
 
+  def update
+    resource = FamilyMember.find(params[:id])
+
+    unless resource.family.account_id == current_account.id
+      render json: { errors: ["Forbidden"] }, status: :forbidden and return
+    end
+
+    if params[:data][:relationships]
+      if params[:data][:relationships][:mother] && params[:data][:relationships][:mother][:data]
+        resource.mother_id = params[:data][:relationships][:mother][:data][:id]
+      end
+      if params[:data][:relationships][:father] && params[:data][:relationships][:father][:data]
+        resource.father_id = params[:data][:relationships][:father][:data][:id]
+      end
+    end
+
+    if resource.update(update_params)
+      render json: resource, status: :ok
+    else
+      render json: { errors: resource.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
   def update_profile_picture
     resource = FamilyMember.find(params[:id])
     file = params.dig(:data, :attributes, :profile_picture)
@@ -269,5 +292,32 @@ class Api::V1::FamilyMembersController < ApplicationController
 
   def resource_params
     params.require(:data).require(:attributes).permit(:first_name, :last_name, :date_of_birth, :date_of_death, :deceased)
+  end
+
+  def update_params
+    raw_attributes = params.require(:data).require(:attributes).to_unsafe_h
+    transformed = raw_attributes.transform_keys { |key| key.tr('-', '_') }
+    ActionController::Parameters.new(transformed).permit(
+      :first_name,
+      :last_name,
+      :short_description,
+      :birth_last_name,
+      :birth_place,
+      :birth_time,
+      :date_of_birth,
+      :gender,
+      :religion,
+      :profession,
+      :deceased,
+      :date_of_death,
+      :death_time,
+      :death_place,
+      :cause_of_death,
+      :burial_date,
+      :burial_place,
+      :internment_place,
+      :hobbies_and_interests,
+      :short_message
+    )
   end
 end
