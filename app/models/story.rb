@@ -4,7 +4,6 @@ class Story < ApplicationRecord
   has_many :family_members, through: :family_members_stories
 
   validates :title, presence: true, length: { maximum: 255 }
-  validates :content, presence: true
   validates :date_type, inclusion: { in: ['exact', 'year'] }
   validates :is_date_approx, inclusion: { in: [true, false] }
 
