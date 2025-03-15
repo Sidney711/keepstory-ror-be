@@ -33,7 +33,7 @@ module Api
                  :additional_attribute_details
 
       filters :search
-      paginator :paged
+      paginator :custom
 
       has_many :stories, inverse: :family_members
       has_many :educations

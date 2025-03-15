@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_28_152929) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_13_092039) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -85,7 +85,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_28_152929) do
 
   create_table "educations", force: :cascade do |t|
     t.bigint "family_member_id", null: false
-    t.string "school_name", limit: 250
+    t.string "school_name", limit: 250, null: false
     t.string "address", limit: 250
     t.string "period", limit: 100
     t.datetime "created_at", null: false
@@ -95,7 +95,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_28_152929) do
 
   create_table "employments", force: :cascade do |t|
     t.bigint "family_member_id", null: false
-    t.string "employer", limit: 250
+    t.string "employer", limit: 250, null: false
     t.string "address", limit: 250
     t.string "period", limit: 100
     t.datetime "created_at", null: false
@@ -170,12 +170,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_28_152929) do
   end
 
   create_table "stories", force: :cascade do |t|
-    t.string "title"
-    t.text "content"
+    t.string "title", limit: 255, null: false
+    t.text "content", null: false
     t.string "date_type"
     t.date "story_date"
     t.integer "story_year"
-    t.boolean "is_date_approx"
+    t.boolean "is_date_approx", default: false, null: false
     t.bigint "family_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

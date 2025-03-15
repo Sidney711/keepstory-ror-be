@@ -3,11 +3,15 @@ class Story < ApplicationRecord
   has_many :family_members_stories, class_name: "FamilyMembersStory", dependent: :delete_all
   has_many :family_members, through: :family_members_stories
 
-  validates :title, presence: true
+  validates :title, presence: true, length: { maximum: 255 }
   validates :date_type, inclusion: { in: ['exact', 'year'] }
-  validate :validate_date_presence
+  validates :is_date_approx, inclusion: { in: [true, false] }
 
   before_validation :clear_opposite_date_field
+
+  validate :date_is_not_in_future
+  validate :year_format
+  validate :has_at_least_one_family_member
 
   private
 
@@ -19,11 +23,27 @@ class Story < ApplicationRecord
     end
   end
 
-  def validate_date_presence
-    if date_type == 'exact' && story_date.blank?
-      errors.add(:story_date, "must be provided for exact date type")
-    elsif date_type == 'year' && story_year.blank?
-      errors.add(:story_year, "must be provided for year date type")
+  def date_is_not_in_future
+    if story_date.present? && story_date > Date.today
+      errors.add(:story_date, "can't be in the future")
+    end
+  end
+
+  def year_format
+    if story_year.present?
+      if story_year < 0
+        errors.add(:story_year, "can't be negative")
+      end
+
+      if story_year > Date.today.year
+        errors.add(:story_year, "can't be in the future")
+      end
+    end
+  end
+
+  def has_at_least_one_family_member
+    if family_members.empty?
+      errors.add(:base, "Story must have at least one family member")
     end
   end
 end
