@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 8.0.1"
+gem "rails", "~> 8.0.2"
 # Use postgresql as the database for Active Record
 gem "pg", "~> 1.1"
 # Use the Puma web server [https://github.com/puma/puma]
@@ -66,6 +66,8 @@ gem 'net-smtp', '0.5.0'
 gem 'wicked_pdf', "~> 2.8.2"
 
 gem 'aws-sdk-rails', '>= 5.1.0'
-gem 'aws-sdk-ses', '~> 1.80.0'
+gem 'aws-sdk-ses', '1.78.0'
 
 gem 'ruby-graphviz', '~> 1.2.5'
+gem "aws-sdk-s3", "1.170", require: false
+gem "aws-sdk-core", "3.211"
