@@ -161,7 +161,16 @@ class Api::V1::FamilyMembersController < ApplicationController
     end
 
     images = resource.images.map do |img|
-      { id: img.id, url: rails_blob_url(img, only_path: true) }
+      {
+        id: img.id,
+        url: img.blob.service.url(
+          img.blob.key,
+          expires_in: 1.hour.to_i,
+          filename: img.blob.filename,
+          disposition: 'inline',
+          content_type: img.blob.content_type
+        )
+      }
     end
 
     render json: { images: images }, status: :ok
@@ -256,7 +265,13 @@ class Api::V1::FamilyMembersController < ApplicationController
     documents = resource.documents.map do |document|
       {
         id: document.id,
-        url: rails_blob_url(document, only_path: true),
+        url: document.blob.service.url(
+          document.blob.key,
+          expires_in: 1.hour.to_i,
+          filename: document.blob.filename,
+          disposition: 'attachment',
+          content_type: document.blob.content_type
+        ),
         filename: document.filename.to_s,
         created_at: document.created_at,
         type: "uploaded"
@@ -267,7 +282,13 @@ class Api::V1::FamilyMembersController < ApplicationController
       resource.exports.each do |export_doc|
         documents << {
           id: export_doc.blob.id,
-          url: rails_blob_url(export_doc, only_path: true),
+          url: export_doc.blob.service.url(
+            export_doc.blob.key,
+            expires_in: 1.hour.to_i,
+            filename: export_doc.blob.filename,
+            disposition: 'attachment',
+            content_type: export_doc.blob.content_type
+          ),
           filename: export_doc.filename.to_s,
           created_at: export_doc.created_at,
           type: "export"
@@ -279,7 +300,13 @@ class Api::V1::FamilyMembersController < ApplicationController
       resource.family.exports.each do |export_doc|
         documents << {
           id: export_doc.blob.id,
-          url: rails_blob_url(export_doc, only_path: true),
+          url: export_doc.blob.service.url(
+            export_doc.blob.key,
+            expires_in: 1.hour.to_i,
+            filename: export_doc.blob.filename,
+            disposition: 'attachment',
+            content_type: export_doc.blob.content_type
+          ),
           filename: export_doc.filename.to_s,
           created_at: export_doc.created_at,
           type: "export"
