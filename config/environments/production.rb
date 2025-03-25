@@ -45,6 +45,7 @@ Rails.application.configure do
 
   # Replace the default in-process memory cache store with a durable alternative.
   # config.cache_store = :mem_cache_store
+  config.cache_store = :solid_cache_store
 
   # Replace the default in-process and non-durable queuing backend for Active Job.
   # config.active_job.queue_adapter = :resque
@@ -85,4 +86,7 @@ Rails.application.configure do
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
   config.action_mailer.perform_deliveries = true
   config.action_mailer.delivery_method = :aws_ses
+
+  config.active_job.queue_adapter = :solid_queue
+  config.solid_queue.connects_to = { database: { writing: :queue } }
 end
