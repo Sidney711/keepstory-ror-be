@@ -32,3 +32,8 @@
 /config/master.key
 
 !/.env.example
+
+/.idea/*
+.idea/
+
+.kamal/app_secrets/*

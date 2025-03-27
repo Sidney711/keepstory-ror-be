@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 8.0.1"
+gem "rails", "~> 8.0.2"
 # Use postgresql as the database for Active Record
 gem "pg", "~> 1.1"
 # Use the Puma web server [https://github.com/puma/puma]
@@ -44,6 +44,30 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+  gem 'rspec-rails', "~> 7.1.1"
+  gem 'factory_bot_rails', "~> 6.4.4"
+  gem 'faker', "~> 3.5.1"
 end
 
+gem "rodauth-rails", "~> 2.0.2"
 
+gem "rack-cors", "~> 2.0.2"
+# Enables Sequel to use Active Record's database connection
+gem "sequel-activerecord_connection", "~> 2.0"
+# Used by Rodauth for password hashing
+gem "argon2", "= 2.3.0"
+# Used by Rodauth for rendering built-in view and email templates
+gem "tilt", "~> 2.4"
+gem 'csv', "~> 3.3.2"
+gem 'jsonapi-resources', "~> 0.11.0.beta2"
+
+gem 'net-smtp', '0.5.0'
+
+gem 'wicked_pdf', "~> 2.8.2"
+
+gem 'aws-sdk-rails', '>= 5.1.0'
+gem 'aws-sdk-ses', '1.78.0'
+
+gem 'ruby-graphviz', '~> 1.2.5'
+gem "aws-sdk-s3", "1.170", require: false
+gem "aws-sdk-core", "3.211"

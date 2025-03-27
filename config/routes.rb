@@ -7,4 +7,40 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+  namespace :api do
+    namespace :v1 do
+      jsonapi_resources :accounts do
+        get 'logged_in', on: :collection
+      end
+      jsonapi_resources :family_members
+      jsonapi_resources :stories
+
+      jsonapi_resources :educations
+      jsonapi_resources :employments
+      jsonapi_resources :marriages
+      jsonapi_resources :residence_addresses
+      jsonapi_resources :additional_attributes
+
+      jsonapi_resources :family_members do
+        member do
+          patch :update_profile_picture
+          delete :delete_profile_picture
+          patch :update_signature
+          delete :delete_signature
+
+          patch :upload_images
+          get   :show_images
+
+          patch :upload_documents
+          get   :show_documents
+        end
+        delete '/images/:image_id', to: 'family_members#delete_image', as: :delete_image
+        delete '/documents/:document_id', to: 'family_members#delete_document', as: :delete_document
+      end
+
+      post 'export_to_pdf/family_member/:id', to: 'export#family_member'
+      post 'export_to_pdf/family', to: 'export#family'
+      post 'export_to_pdf/family_tree/:id', to: 'export#family_tree'
+    end
+  end
 end

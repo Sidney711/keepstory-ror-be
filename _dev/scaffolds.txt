@@ -1,0 +1,10 @@
+rails generate model Family uuid:string
+rails generate model FamilyMember first_name:string last_name:string date_of_birth:date date_of_death:date family:references
+rails generate migration CreateJoinTableStoriesFamilyMembers story family_member
+rails generate model Story title:string content:text date_type:string story_date:date story_year:integer is_date_approx:boolean family:references
+rails generate migration AddDetailsToFamilyMembers
+rails generate model Marriage first_partner:references second_partner:references period:string{100}
+rails generate model Education family_member:references school_name:string{250} address:string{250} period:string{100}
+rails generate model Employment family_member:references employer:string{250} address:string{250} period:string{100}
+rails generate model ResidenceAddress family_member:references address:string{250} period:string{100}
+rails generate model AdditionalAttribute family_member:references attribute_name:string{150} short_text:string{150} long_text:string{2000}
