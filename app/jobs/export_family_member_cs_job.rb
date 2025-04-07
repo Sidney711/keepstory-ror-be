@@ -225,13 +225,14 @@ class ExportFamilyMemberCsJob < ApplicationJob
             padding: 0;
             color: #000;
             line-height: 1.6;
+            font-size: 16px;
           }
-          h1 { font-size: 32px; font-weight: bold; margin: 20px 0 10px; }
-          h2 { font-size: 28px; font-weight: bold; margin: 18px 0 9px; }
-          h3 { font-size: 24px; font-weight: bold; margin: 16px 0 8px; }
-          h4 { font-size: 20px; font-weight: bold; margin: 14px 0 7px; }
-          h5 { font-size: 18px; font-weight: bold; margin: 12px 0 6px; }
-          h6 { font-size: 16px; font-weight: bold; margin: 10px 0 5px; }
+          h1 { font-size: 35px; font-weight: bold; margin: 20px 0 10px; }
+          h2 { font-size: 31px; font-weight: bold; margin: 18px 0 9px; }
+          h3 { font-size: 27px; font-weight: bold; margin: 16px 0 8px; }
+          h4 { font-size: 23px; font-weight: bold; margin: 14px 0 7px; }
+          h5 { font-size: 21px; font-weight: bold; margin: 12px 0 6px; }
+          h6 { font-size: 19px; font-weight: bold; margin: 10px 0 5px; }
           .cover {
             display: flex;
             justify-content: center;
@@ -241,11 +242,11 @@ class ExportFamilyMemberCsJob < ApplicationJob
             page-break-after: always;
           }
           .cover h1 {
-            font-size: 32px;
+            font-size: 52px;
             margin: 0;
           }
           .cover h2 {
-            font-size: 28px;
+            font-size: 45px;
             margin: 10px 0 0;
             font-weight: normal;
           }
