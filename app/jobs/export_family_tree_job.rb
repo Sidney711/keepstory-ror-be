@@ -170,7 +170,7 @@ class ExportFamilyTreeJob < ApplicationJob
       next if i == 0
       level.each_with_index do |member, j|
         parent_index = j / 2
-        edge_label = (j.even? ? "matka" : "otec")
+        edge_label = (j.even? ? "" : "")
         g.add_edges(nodes[[i - 1, parent_index]], nodes[[i, j]], label: edge_label, fontsize: 14, penwidth: 3)
       end
     end
