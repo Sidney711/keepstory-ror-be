@@ -23,24 +23,24 @@ class ExportFamilyMemberEnJob < ApplicationJob
     end
 
     personal_items = []
-    personal_items << "<li><strong>Name:</strong> #{family_member.first_name} #{family_member.last_name}</li>"
-    personal_items << "<li><strong>Birth Surname:</strong> #{family_member.birth_last_name}</li>" if family_member.birth_last_name.present?
-    personal_items << "<li><strong>Date of Birth:</strong> #{family_member.date_of_birth.strftime('%d.%m.%Y')}</li>" if family_member.date_of_birth.present?
-    personal_items << "<li><strong>Place of Birth:</strong> #{family_member.birth_place}</li>" if family_member.birth_place.present?
-    personal_items << "<li><strong>Time of Birth:</strong> #{family_member.birth_time.strftime('%H:%M')}</li>" if family_member.birth_time.present?
+    personal_items << "<li><strong>Name:</strong> #{ERB::Util.html_escape(family_member.first_name)} #{ERB::Util.html_escape(family_member.last_name)}</li>"
+    personal_items << "<li><strong>Birth Surname:</strong> #{ERB::Util.html_escape(family_member.birth_last_name)}</li>" if family_member.birth_last_name.present?
+    personal_items << "<li><strong>Date of Birth:</strong> #{ERB::Util.html_escape(family_member.date_of_birth.strftime('%d.%m.%Y'))}</li>" if family_member.date_of_birth.present?
+    personal_items << "<li><strong>Place of Birth:</strong> #{ERB::Util.html_escape(family_member.birth_place)}</li>" if family_member.birth_place.present?
+    personal_items << "<li><strong>Time of Birth:</strong> #{ERB::Util.html_escape(family_member.birth_time.strftime('%H:%M'))}</li>" if family_member.birth_time.present?
     if family_member.gender.present?
       gender_text = case family_member.gender
                     when "male" then "Male"
                     when "female" then "Female"
                     else "Other"
                     end
-      personal_items << "<li><strong>Gender:</strong> #{gender_text}</li>"
+      personal_items << "<li><strong>Gender:</strong> #{ERB::Util.html_escape(gender_text)}</li>"
     end
-    personal_items << "<li><strong>Religion:</strong> #{family_member.religion}</li>" if family_member.religion.present?
-    personal_items << "<li><strong>Profession:</strong> #{family_member.profession}</li>" if family_member.profession.present?
-    personal_items << "<li><strong>Hobbies:</strong> #{family_member.hobbies_and_interests}</li>" if family_member.hobbies_and_interests.present?
-    personal_items << "<li><strong>Description:</strong> #{family_member.short_description}</li>" if family_member.short_description.present?
-    personal_items << "<li><strong>Message:</strong> #{family_member.short_message}</li>" if family_member.short_message.present?
+    personal_items << "<li><strong>Religion:</strong> #{ERB::Util.html_escape(family_member.religion)}</li>" if family_member.religion.present?
+    personal_items << "<li><strong>Profession:</strong> #{ERB::Util.html_escape(family_member.profession)}</li>" if family_member.profession.present?
+    personal_items << "<li><strong>Hobbies:</strong> #{ERB::Util.html_escape(family_member.hobbies_and_interests)}</li>" if family_member.hobbies_and_interests.present?
+    personal_items << "<li><strong>Description:</strong> #{ERB::Util.html_escape(family_member.short_description)}</li>" if family_member.short_description.present?
+    personal_items << "<li><strong>Message:</strong> #{ERB::Util.html_escape(family_member.short_message)}</li>" if family_member.short_message.present?
 
     personal_info = ""
     if personal_items.any?
@@ -57,13 +57,13 @@ class ExportFamilyMemberEnJob < ApplicationJob
     death_info = ""
     if family_member.deceased
       death_items = []
-      death_items << "<li><strong>Date of Death:</strong> #{family_member.date_of_death.strftime('%d.%m.%Y')}</li>" if family_member.date_of_death.present?
-      death_items << "<li><strong>Time of Death:</strong> #{family_member.death_time.strftime('%H:%M')}</li>" if family_member.death_time.present?
-      death_items << "<li><strong>Place of Death:</strong> #{family_member.death_place}</li>" if family_member.death_place.present?
-      death_items << "<li><strong>Cause of Death:</strong> #{family_member.cause_of_death}</li>" if family_member.cause_of_death.present?
-      death_items << "<li><strong>Date of Burial:</strong> #{family_member.burial_date.strftime('%d.%m.%Y')}</li>" if family_member.burial_date.present?
-      death_items << "<li><strong>Place of Burial:</strong> #{family_member.burial_place}</li>" if family_member.burial_place.present?
-      death_items << "<li><strong>Place of Interment:</strong> #{family_member.internment_place}</li>" if family_member.internment_place.present?
+      death_items << "<li><strong>Date of Death:</strong> #{ERB::Util.html_escape(family_member.date_of_death.strftime('%d.%m.%Y'))}</li>" if family_member.date_of_death.present?
+      death_items << "<li><strong>Time of Death:</strong> #{ERB::Util.html_escape(family_member.death_time.strftime('%H:%M'))}</li>" if family_member.death_time.present?
+      death_items << "<li><strong>Place of Death:</strong> #{ERB::Util.html_escape(family_member.death_place)}</li>" if family_member.death_place.present?
+      death_items << "<li><strong>Cause of Death:</strong> #{ERB::Util.html_escape(family_member.cause_of_death)}</li>" if family_member.cause_of_death.present?
+      death_items << "<li><strong>Date of Burial:</strong> #{ERB::Util.html_escape(family_member.burial_date.strftime('%d.%m.%Y'))}</li>" if family_member.burial_date.present?
+      death_items << "<li><strong>Place of Burial:</strong> #{ERB::Util.html_escape(family_member.burial_place)}</li>" if family_member.burial_place.present?
+      death_items << "<li><strong>Place of Interment:</strong> #{ERB::Util.html_escape(family_member.internment_place)}</li>" if family_member.internment_place.present?
       if death_items.any?
         death_info = <<~HTML
           <h3>Death Details</h3>
@@ -78,13 +78,13 @@ class ExportFamilyMemberEnJob < ApplicationJob
     if family_member.father.present?
       parent_info += <<~HTML
         <h3>Father</h3>
-        <p>#{family_member.father.first_name} #{family_member.father.last_name}</p>
+        <p>#{ERB::Util.html_escape(family_member.father.first_name)} #{ERB::Util.html_escape(family_member.father.last_name)}</p>
       HTML
     end
     if family_member.mother.present?
       parent_info += <<~HTML
         <h3>Mother</h3>
-        <p>#{family_member.mother.first_name} #{family_member.mother.last_name}</p>
+        <p>#{ERB::Util.html_escape(family_member.mother.first_name)} #{ERB::Util.html_escape(family_member.mother.last_name)}</p>
       HTML
     end
 
@@ -101,8 +101,8 @@ class ExportFamilyMemberEnJob < ApplicationJob
     siblings_html = ""
     if siblings.any?
       siblings_html = "<h3>Siblings</h3>" + siblings.map do |sibling|
-        li_date = sibling.date_of_birth.present? ? sibling.date_of_birth.strftime('%d.%m.%Y') : nil
-        content = "<p><strong>Name:</strong> #{sibling.first_name} #{sibling.last_name}</p>"
+        li_date = sibling.date_of_birth.present? ? ERB::Util.html_escape(sibling.date_of_birth.strftime('%d.%m.%Y')) : nil
+        content = "<p><strong>Name:</strong> #{ERB::Util.html_escape(sibling.first_name)} #{ERB::Util.html_escape(sibling.last_name)}</p>"
         content << "<p><strong>Date of Birth:</strong> #{li_date}</p>" if li_date
         "<div class='card'>#{content}</div>"
       end.join
@@ -117,8 +117,8 @@ class ExportFamilyMemberEnJob < ApplicationJob
     grandparents_html = ""
     if grandparents.any?
       grandparents_html = "<h3>Grandparents</h3>" + grandparents.map do |grandparent|
-        li_date = grandparent.date_of_birth.present? ? grandparent.date_of_birth.strftime('%d.%m.%Y') : nil
-        content = "<p><strong>Name:</strong> #{grandparent.first_name} #{grandparent.last_name}</p>"
+        li_date = grandparent.date_of_birth.present? ? ERB::Util.html_escape(grandparent.date_of_birth.strftime('%d.%m.%Y')) : nil
+        content = "<p><strong>Name:</strong> #{ERB::Util.html_escape(grandparent.first_name)} #{ERB::Util.html_escape(grandparent.last_name)}</p>"
         content << "<p><strong>Date of Birth:</strong> #{li_date}</p>" if li_date
         "<div class='card'>#{content}</div>"
       end.join
@@ -128,8 +128,8 @@ class ExportFamilyMemberEnJob < ApplicationJob
     children_html = ""
     if children.any?
       children_html = "<h3>Children</h3>" + children.map do |child|
-        li_date = child.date_of_birth.present? ? child.date_of_birth.strftime('%d.%m.%Y') : nil
-        content = "<p><strong>Name:</strong> #{child.first_name} #{child.last_name}</p>"
+        li_date = child.date_of_birth.present? ? ERB::Util.html_escape(child.date_of_birth.strftime('%d.%m.%Y')) : nil
+        content = "<p><strong>Name:</strong> #{ERB::Util.html_escape(child.first_name)} #{ERB::Util.html_escape(child.last_name)}</p>"
         content << "<p><strong>Date of Birth:</strong> #{li_date}</p>" if li_date
         "<div class='card'>#{content}</div>"
       end.join
@@ -139,9 +139,9 @@ class ExportFamilyMemberEnJob < ApplicationJob
     if educations.any?
       educations_html = "<h3>Education</h3>" + educations.map do |edu|
         content = ""
-        content << "<p><strong>School:</strong> #{edu.school_name}</p>" if edu.school_name.present?
-        content << "<p><strong>Address:</strong> #{edu.address}</p>" if edu.address.present?
-        content << "<p><strong>Period:</strong> #{edu.period}</p>" if edu.period.present?
+        content << "<p><strong>School:</strong> #{ERB::Util.html_escape(edu.school_name)}</p>" if edu.school_name.present?
+        content << "<p><strong>Address:</strong> #{ERB::Util.html_escape(edu.address)}</p>" if edu.address.present?
+        content << "<p><strong>Period:</strong> #{ERB::Util.html_escape(edu.period)}</p>" if edu.period.present?
         "<div class='card'>#{content}</div>" if content.present?
       end.join
     end
@@ -150,9 +150,9 @@ class ExportFamilyMemberEnJob < ApplicationJob
     if employments.any?
       employments_html = "<h3>Employment</h3>" + employments.map do |emp|
         content = ""
-        content << "<p><strong>Employer:</strong> #{emp.employer}</p>" if emp.employer.present?
-        content << "<p><strong>Address:</strong> #{emp.address}</p>" if emp.address.present?
-        content << "<p><strong>Period:</strong> #{emp.period}</p>" if emp.period.present?
+        content << "<p><strong>Employer:</strong> #{ERB::Util.html_escape(emp.employer)}</p>" if emp.employer.present?
+        content << "<p><strong>Address:</strong> #{ERB::Util.html_escape(emp.address)}</p>" if emp.address.present?
+        content << "<p><strong>Period:</strong> #{ERB::Util.html_escape(emp.period)}</p>" if emp.period.present?
         "<div class='card'>#{content}</div>" if content.present?
       end.join
     end
@@ -161,8 +161,8 @@ class ExportFamilyMemberEnJob < ApplicationJob
     if residences.any?
       residences_html = "<h3>Residence Address</h3>" + residences.map do |res|
         content = ""
-        content << "<p><strong>Address:</strong> #{res.address}</p>" if res.address.present?
-        content << "<p><strong>Period:</strong> #{res.period}</p>" if res.period.present?
+        content << "<p><strong>Address:</strong> #{ERB::Util.html_escape(res.address)}</p>" if res.address.present?
+        content << "<p><strong>Period:</strong> #{ERB::Util.html_escape(res.period)}</p>" if res.period.present?
         "<div class='card'>#{content}</div>" if content.present?
       end.join
     end
@@ -171,7 +171,7 @@ class ExportFamilyMemberEnJob < ApplicationJob
     if additional_attrs.any?
       additional_attrs_html = "<h3>Additional Information</h3>" + additional_attrs.map do |attr|
         if attr.attribute_name.present? && attr.long_text.present?
-          "<div class='card'><p><strong>#{attr.attribute_name}:</strong> #{attr.long_text}</p></div>"
+          "<div class='card'><p><strong>#{ERB::Util.html_escape(attr.attribute_name)}:</strong> #{ERB::Util.html_escape(attr.long_text)}</p></div>"
         end
       end.join
     end
@@ -182,8 +182,8 @@ class ExportFamilyMemberEnJob < ApplicationJob
         partner = m.first_partner_id == family_member.id ? m.second_partner : m.first_partner
         if partner.present? && partner.first_name.present? && partner.last_name.present?
           "<div class='card'>
-             <p><strong>Partner:</strong> #{partner.first_name} #{partner.last_name}</p>
-             #{"<p><strong>Period:</strong> #{m.period}</p>" if m.period.present?}
+             <p><strong>Partner:</strong> #{ERB::Util.html_escape(partner.first_name)} #{ERB::Util.html_escape(partner.last_name)}</p>
+             #{"<p><strong>Period:</strong> #{ERB::Util.html_escape(m.period)}</p>" if m.period.present?}
            </div>"
         end
       end.join
@@ -192,9 +192,9 @@ class ExportFamilyMemberEnJob < ApplicationJob
     stories_html = ""
     if stories.any?
       stories_html = "<div class='gallery-h'><h3>Stories</h3></div><div class='stories-section'>" + stories.map do |story|
-        date_info = story.story_date.present? ? story.story_date.strftime('%d.%m.%Y') : (story.story_year.to_s if story.story_year.present?)
+        date_info = story.story_date.present? ? ERB::Util.html_escape(story.story_date.strftime('%d.%m.%Y')) : (ERB::Util.html_escape(story.story_year.to_s) if story.story_year.present?)
         "<div class='story'>
-           <h3 class='story-title'><strong>#{story.title}</strong> #{"(#{date_info})" if date_info}</h3>
+           <h3 class='story-title'><strong>#{ERB::Util.html_escape(story.title)}</strong> #{"(#{date_info})" if date_info}</h3>
            <div class='story-content'>#{story.content}</div>
          </div><div class='page-break'></div>"
       end.join + "</div>"
@@ -225,13 +225,14 @@ class ExportFamilyMemberEnJob < ApplicationJob
             padding: 0;
             color: #000;
             line-height: 1.6;
+            font-size: 16px;
           }
-          h1 { font-size: 32px; font-weight: bold; margin: 20px 0 10px; }
-          h2 { font-size: 28px; font-weight: bold; margin: 18px 0 9px; }
-          h3 { font-size: 24px; font-weight: bold; margin: 16px 0 8px; }
-          h4 { font-size: 20px; font-weight: bold; margin: 14px 0 7px; }
-          h5 { font-size: 18px; font-weight: bold; margin: 12px 0 6px; }
-          h6 { font-size: 16px; font-weight: bold; margin: 10px 0 5px; }
+          h1 { font-size: 35px; font-weight: bold; margin: 20px 0 10px; }
+          h2 { font-size: 31px; font-weight: bold; margin: 18px 0 9px; }
+          h3 { font-size: 27px; font-weight: bold; margin: 16px 0 8px; }
+          h4 { font-size: 23px; font-weight: bold; margin: 14px 0 7px; }
+          h5 { font-size: 21px; font-weight: bold; margin: 12px 0 6px; }
+          h6 { font-size: 19px; font-weight: bold; margin: 10px 0 5px; }
           .cover {
             display: flex;
             justify-content: center;
@@ -241,11 +242,11 @@ class ExportFamilyMemberEnJob < ApplicationJob
             page-break-after: always;
           }
           .cover h1 {
-            font-size: 32px;
+            font-size: 52px;
             margin: 0;
           }
           .cover h2 {
-            font-size: 28px;
+            font-size: 45px;
             margin: 10px 0 0;
             font-weight: normal;
           }
@@ -320,7 +321,7 @@ class ExportFamilyMemberEnJob < ApplicationJob
         <div class="cover">
           <div>
             <h1>Personal Memories</h1>
-            <h2>#{family_member.first_name} #{family_member.last_name}</h2>
+            <h2>#{ERB::Util.html_escape(family_member.first_name)} #{ERB::Util.html_escape(family_member.last_name)}</h2>
           </div>
         </div>
         <div class="details">

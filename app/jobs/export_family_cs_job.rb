@@ -34,10 +34,11 @@ class ExportFamilyCsJob < ApplicationJob
             padding: 0;
             color: #000;
             line-height: 1.6;
+            font-size: 16px;
           }
-          h1 { font-size: 32px; font-weight: bold; margin: 20px 0 10px; }
-          h2 { font-size: 28px; font-weight: bold; margin: 18px 0 9px; }
-          h3 { font-size: 24px; font-weight: bold; margin: 16px 0 8px; }
+          h1 { font-size: 35px; font-weight: bold; margin: 20px 0 10px; }
+          h2 { font-size: 31px; font-weight: bold; margin: 18px 0 9px; }
+          h3 { font-size: 27px; font-weight: bold; margin: 16px 0 8px; }
           .cover {
             display: flex;
             justify-content: center;
@@ -46,8 +47,8 @@ class ExportFamilyCsJob < ApplicationJob
             text-align: center;
             page-break-after: always;
           }
-          .cover h1 { font-size: 32px; margin: 0; }
-          .cover h2 { font-size: 28px; margin: 10px 0 0; font-weight: normal; }
+          .cover h1 { font-size: 52px; margin: 0; }
+          .cover h2 { font-size: 45px; margin: 10px 0 0; font-weight: normal; }
           .cover p { font-size: 16px; margin: 5px 0; }
           .details {
             max-width: 800px;
@@ -151,24 +152,24 @@ class ExportFamilyCsJob < ApplicationJob
     end
 
     personal_items = []
-    personal_items << "<li><strong>Jméno:</strong> #{member.first_name} #{member.last_name}</li>"
-    personal_items << "<li><strong>Rodné příjmení:</strong> #{member.birth_last_name}</li>" if member.birth_last_name.present?
-    personal_items << "<li><strong>Datum narození:</strong> #{member.date_of_birth.strftime('%d.%m.%Y')}</li>" if member.date_of_birth.present?
-    personal_items << "<li><strong>Místo narození:</strong> #{member.birth_place}</li>" if member.birth_place.present?
-    personal_items << "<li><strong>Čas narození:</strong> #{member.birth_time.strftime('%H:%M')}</li>" if member.birth_time.present?
+    personal_items << "<li><strong>Jméno:</strong> #{ERB::Util.html_escape(member.first_name)} #{ERB::Util.html_escape(member.last_name)}</li>"
+    personal_items << "<li><strong>Rodné příjmení:</strong> #{ERB::Util.html_escape(member.birth_last_name)}</li>" if member.birth_last_name.present?
+    personal_items << "<li><strong>Datum narození:</strong> #{ERB::Util.html_escape(member.date_of_birth.strftime('%d.%m.%Y'))}</li>" if member.date_of_birth.present?
+    personal_items << "<li><strong>Místo narození:</strong> #{ERB::Util.html_escape(member.birth_place)}</li>" if member.birth_place.present?
+    personal_items << "<li><strong>Čas narození:</strong> #{ERB::Util.html_escape(member.birth_time.strftime('%H:%M'))}</li>" if member.birth_time.present?
     if member.gender.present?
       gender_text = case member.gender
                     when "male" then "Muž"
                     when "female" then "Žena"
                     else "Ostatní"
                     end
-      personal_items << "<li><strong>Pohlaví:</strong> #{gender_text}</li>"
+      personal_items << "<li><strong>Pohlaví:</strong> #{ERB::Util.html_escape(gender_text)}</li>"
     end
-    personal_items << "<li><strong>Víra:</strong> #{member.religion}</li>" if member.religion.present?
-    personal_items << "<li><strong>Povolání:</strong> #{member.profession}</li>" if member.profession.present?
-    personal_items << "<li><strong>Zájmy:</strong> #{member.hobbies_and_interests}</li>" if member.hobbies_and_interests.present?
-    personal_items << "<li><strong>Popis:</strong> #{member.short_description}</li>" if member.short_description.present?
-    personal_items << "<li><strong>Zpráva:</strong> #{member.short_message}</li>" if member.short_message.present?
+    personal_items << "<li><strong>Víra:</strong> #{ERB::Util.html_escape(member.religion)}</li>" if member.religion.present?
+    personal_items << "<li><strong>Povolání:</strong> #{ERB::Util.html_escape(member.profession)}</li>" if member.profession.present?
+    personal_items << "<li><strong>Zájmy:</strong> #{ERB::Util.html_escape(member.hobbies_and_interests)}</li>" if member.hobbies_and_interests.present?
+    personal_items << "<li><strong>Popis:</strong> #{ERB::Util.html_escape(member.short_description)}</li>" if member.short_description.present?
+    personal_items << "<li><strong>Zpráva:</strong> #{ERB::Util.html_escape(member.short_message)}</li>" if member.short_message.present?
 
     personal_info = ""
     if personal_items.any?
@@ -185,13 +186,13 @@ class ExportFamilyCsJob < ApplicationJob
     death_info = ""
     if member.deceased
       death_items = []
-      death_items << "<li><strong>Datum úmrtí:</strong> #{member.date_of_death.strftime('%d.%m.%Y')}</li>" if member.date_of_death.present?
-      death_items << "<li><strong>Čas úmrtí:</strong> #{member.death_time.strftime('%H:%M')}</li>" if member.death_time.present?
-      death_items << "<li><strong>Místo úmrtí:</strong> #{member.death_place}</li>" if member.death_place.present?
-      death_items << "<li><strong>Příčina úmrtí:</strong> #{member.cause_of_death}</li>" if member.cause_of_death.present?
-      death_items << "<li><strong>Datum pohřbu:</strong> #{member.burial_date.strftime('%d.%m.%Y')}</li>" if member.burial_date.present?
-      death_items << "<li><strong>Místo pohřbu:</strong> #{member.burial_place}</li>" if member.burial_place.present?
-      death_items << "<li><strong>Místo internace:</strong> #{member.internment_place}</li>" if member.internment_place.present?
+      death_items << "<li><strong>Datum úmrtí:</strong> #{ERB::Util.html_escape(member.date_of_death.strftime('%d.%m.%Y'))}</li>" if member.date_of_death.present?
+      death_items << "<li><strong>Čas úmrtí:</strong> #{ERB::Util.html_escape(member.death_time.strftime('%H:%M'))}</li>" if member.death_time.present?
+      death_items << "<li><strong>Místo úmrtí:</strong> #{ERB::Util.html_escape(member.death_place)}</li>" if member.death_place.present?
+      death_items << "<li><strong>Příčina úmrtí:</strong> #{ERB::Util.html_escape(member.cause_of_death)}</li>" if member.cause_of_death.present?
+      death_items << "<li><strong>Datum pohřbu:</strong> #{ERB::Util.html_escape(member.burial_date.strftime('%d.%m.%Y'))}</li>" if member.burial_date.present?
+      death_items << "<li><strong>Místo pohřbu:</strong> #{ERB::Util.html_escape(member.burial_place)}</li>" if member.burial_place.present?
+      death_items << "<li><strong>Místo internace:</strong> #{ERB::Util.html_escape(member.internment_place)}</li>" if member.internment_place.present?
       if death_items.any?
         death_info = <<~HTML
           <h3>Údaje o úmrtí</h3>
@@ -206,13 +207,13 @@ class ExportFamilyCsJob < ApplicationJob
     if member.father.present?
       parent_info += <<~HTML
         <h3>Otec</h3>
-        <p>#{member.father.first_name} #{member.father.last_name}</p>
+        <p>#{ERB::Util.html_escape(member.father.first_name)} #{ERB::Util.html_escape(member.father.last_name)}</p>
       HTML
     end
     if member.mother.present?
       parent_info += <<~HTML
         <h3>Matka</h3>
-        <p>#{member.mother.first_name} #{member.mother.last_name}</p>
+        <p>#{ERB::Util.html_escape(member.mother.first_name)} #{ERB::Util.html_escape(member.mother.last_name)}</p>
       HTML
     end
 
@@ -229,8 +230,8 @@ class ExportFamilyCsJob < ApplicationJob
     siblings_html = ""
     if siblings.any?
       siblings_html = "<h3>Sourozenci</h3>" + siblings.map do |sibling|
-        li_date = sibling.date_of_birth.present? ? sibling.date_of_birth.strftime('%d.%m.%Y') : nil
-        content = "<p><strong>Jméno:</strong> #{sibling.first_name} #{sibling.last_name}</p>"
+        li_date = sibling.date_of_birth.present? ? ERB::Util.html_escape(sibling.date_of_birth.strftime('%d.%m.%Y')) : nil
+        content = "<p><strong>Jméno:</strong> #{ERB::Util.html_escape(sibling.first_name)} #{ERB::Util.html_escape(sibling.last_name)}</p>"
         content << "<p><strong>Datum narození:</strong> #{li_date}</p>" if li_date
         "<div class='card'>#{content}</div>"
       end.join
@@ -245,8 +246,8 @@ class ExportFamilyCsJob < ApplicationJob
     grandparents_html = ""
     if grandparents.any?
       grandparents_html = "<h3>Prarodiče</h3>" + grandparents.map do |grandparent|
-        li_date = grandparent.date_of_birth.present? ? grandparent.date_of_birth.strftime('%d.%m.%Y') : nil
-        content = "<p><strong>Jméno:</strong> #{grandparent.first_name} #{grandparent.last_name}</p>"
+        li_date = grandparent.date_of_birth.present? ? ERB::Util.html_escape(grandparent.date_of_birth.strftime('%d.%m.%Y')) : nil
+        content = "<p><strong>Jméno:</strong> #{ERB::Util.html_escape(grandparent.first_name)} #{ERB::Util.html_escape(grandparent.last_name)}</p>"
         content << "<p><strong>Datum narození:</strong> #{li_date}</p>" if li_date
         "<div class='card'>#{content}</div>"
       end.join
@@ -257,9 +258,9 @@ class ExportFamilyCsJob < ApplicationJob
     if educations.any?
       educations_html = "<h3>Vzdělání</h3>" + educations.map do |edu|
         content = ""
-        content << "<p><strong>Škola:</strong> #{edu.school_name}</p>" if edu.school_name.present?
-        content << "<p><strong>Adresa:</strong> #{edu.address}</p>" if edu.address.present?
-        content << "<p><strong>Období:</strong> #{edu.period}</p>" if edu.period.present?
+        content << "<p><strong>Škola:</strong> #{ERB::Util.html_escape(edu.school_name)}</p>" if edu.school_name.present?
+        content << "<p><strong>Adresa:</strong> #{ERB::Util.html_escape(edu.address)}</p>" if edu.address.present?
+        content << "<p><strong>Období:</strong> #{ERB::Util.html_escape(edu.period)}</p>" if edu.period.present?
         "<div class='card'>#{content}</div>" if content.present?
       end.join
     end
@@ -269,9 +270,9 @@ class ExportFamilyCsJob < ApplicationJob
     if employments.any?
       employments_html = "<h3>Zaměstnání</h3>" + employments.map do |emp|
         content = ""
-        content << "<p><strong>Zaměstnavatel:</strong> #{emp.employer}</p>" if emp.employer.present?
-        content << "<p><strong>Adresa:</strong> #{emp.address}</p>" if emp.address.present?
-        content << "<p><strong>Období:</strong> #{emp.period}</p>" if emp.period.present?
+        content << "<p><strong>Zaměstnavatel:</strong> #{ERB::Util.html_escape(emp.employer)}</p>" if emp.employer.present?
+        content << "<p><strong>Adresa:</strong> #{ERB::Util.html_escape(emp.address)}</p>" if emp.address.present?
+        content << "<p><strong>Období:</strong> #{ERB::Util.html_escape(emp.period)}</p>" if emp.period.present?
         "<div class='card'>#{content}</div>" if content.present?
       end.join
     end
@@ -281,8 +282,8 @@ class ExportFamilyCsJob < ApplicationJob
     if residences.any?
       residences_html = "<h3>Adresa bydliště</h3>" + residences.map do |res|
         content = ""
-        content << "<p><strong>Adresa:</strong> #{res.address}</p>" if res.address.present?
-        content << "<p><strong>Období:</strong> #{res.period}</p>" if res.period.present?
+        content << "<p><strong>Adresa:</strong> #{ERB::Util.html_escape(res.address)}</p>" if res.address.present?
+        content << "<p><strong>Období:</strong> #{ERB::Util.html_escape(res.period)}</p>" if res.period.present?
         "<div class='card'>#{content}</div>" if content.present?
       end.join
     end
@@ -292,7 +293,7 @@ class ExportFamilyCsJob < ApplicationJob
     if additional_attrs.any?
       additional_attrs_html = "<h3>Další informace</h3>" + additional_attrs.map do |attr|
         if attr.attribute_name.present? && attr.long_text.present?
-          "<div class='card'><p><strong>#{attr.attribute_name}:</strong> #{attr.long_text}</p></div>"
+          "<div class='card'><p><strong>#{ERB::Util.html_escape(attr.attribute_name)}:</strong> #{ERB::Util.html_escape(attr.long_text)}</p></div>"
         end
       end.join
     end
@@ -304,8 +305,8 @@ class ExportFamilyCsJob < ApplicationJob
         partner = m.first_partner_id == member.id ? m.second_partner : m.first_partner
         if partner.present? && partner.first_name.present? && partner.last_name.present?
           "<div class='card'>
-             <p><strong>Partner:</strong> #{partner.first_name} #{partner.last_name}</p>
-             #{"<p><strong>Období:</strong> #{m.period}</p>" if m.period.present?}
+             <p><strong>Partner:</strong> #{ERB::Util.html_escape(partner.first_name)} #{ERB::Util.html_escape(partner.last_name)}</p>
+             #{"<p><strong>Období:</strong> #{ERB::Util.html_escape(m.period)}</p>" if m.period.present?}
            </div>"
         end
       end.join
@@ -315,14 +316,11 @@ class ExportFamilyCsJob < ApplicationJob
     stories_html = ""
     if stories.any?
       stories_html = "<div class='gallery-h'><h3>Příběhy</h3></div><div class='stories-section'>" + stories.map do |story|
-        date_info = story.story_date.present? ? story.story_date.strftime('%d.%m.%Y') : (story.story_year.to_s if story.story_year.present?)
-        <<~STORY
-          <div class='story'>
-             <h3 class='story-title'><strong>#{story.title}</strong> #{"(#{date_info})" if date_info}</h3>
-             <div class='story-content'>#{story.content}</div>
-          </div>
-          <div class='page-break'></div>
-        STORY
+        date_info = story.story_date.present? ? ERB::Util.html_escape(story.story_date.strftime('%d.%m.%Y')) : (ERB::Util.html_escape(story.story_year.to_s) if story.story_year.present?)
+        "<div class='story'>
+           <h3 class='story-title'><strong>#{ERB::Util.html_escape(story.title)}</strong> #{"(#{date_info})" if date_info}</h3>
+           <div class='story-content'>#{story.content}</div>
+         </div><div class='page-break'></div>"
       end.join + "</div>"
     end
 
@@ -340,9 +338,9 @@ class ExportFamilyCsJob < ApplicationJob
       <div class="cover">
         <div>
           #{profile_picture_tag}
-          <h2>#{member.first_name} #{member.last_name}</h2>
-          #{ member.date_of_birth.present? ? "<p>Datum narození: #{member.date_of_birth.strftime('%d.%m.%Y')}</p>" : "" }
-          #{ (member.deceased && member.date_of_death.present?) ? "<p>Datum úmrtí: #{member.date_of_death.strftime('%d.%m.%Y')}</p>" : "" }
+          <h2>#{ERB::Util.html_escape(member.first_name)} #{ERB::Util.html_escape(member.last_name)}</h2>
+          #{ member.date_of_birth.present? ? "<p>Datum narození: #{ERB::Util.html_escape(member.date_of_birth.strftime('%d.%m.%Y'))}</p>" : "" }
+          #{ (member.deceased && member.date_of_death.present?) ? "<p>Datum úmrtí: #{ERB::Util.html_escape(member.date_of_death.strftime('%d.%m.%Y'))}</p>" : "" }
         </div>
       </div>
     HTML
