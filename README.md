@@ -1,82 +1,49 @@
-# Deploy Instrukce
+# Keepstory backend
 
-## 1. Úprava konfigurace databáze
+Here you can find the source code of the backend part of the Keepstory application.
 
-Před nasazením je potřeba upravit soubor `config/database.yml`, aby obsahoval správné přihlašovací údaje k databázi.
+## Getting Started
 
-1. Otevřete soubor `config/database.yml`.
-2. Najděte část s konfigurací pro produkční prostředí (`production`).
-3. Změňte hodnotu `username` z `postgres` na `keepstory`:
+To run the application, please follow the instructions below.
+
+### Prerequisites
+
+- [Docker](https://www.docker.com/) must be installed on your system.
+
+### Setup
+
+1. **Generate Master Key**  
+   Ensure you generate the master key required for decrypting credentials before starting up the application.
+
+2. **Configure Credentials**  
+   You need to fill in the `config/credentials.yml.enc` file with the following configuration details:
 
    ```yaml
-   production:
-     adapter: postgresql
-     encoding: unicode
-     database: your_database_name
-     username: keepstory
-     password: your_password
-     host: your_database_host
+   secret_key_base:
 
-2. Změna FE URL v Rails Credentials
+   postgres:
+     user:
+     password:
+     db:
+     production_database_password: 
 
-Aplikace využívá Rails Credentials (šifrované credentials), které se neupravují přímo v souboru. Postupujte podle následujících kroků:
+   frontend_url:
+   cookies_secret_key:
+   kamal_registry_password: 
 
-    Přihlášení do kontejneru:
+   aws_access_key_id:
+   aws_secret_access_key:
 
-        Zjistěte název nebo ID kontejneru:
+   cloudflare_r2_access_key_id:
+   cloudflare_r2_secret_access_key:
+   cloudflare_r2_endpoint:
 
-docker ps
+Make sure that each field is properly set to reflect your environment configuration.
 
-Spusťte interaktivní shell:
+3. **Build and Start the Containers**
+   Use Docker Compose to build and run the application:
+    ```bash
+    docker compose build
+    docker compose up
 
-    docker exec -it <jméno_nebo_ID_kontejneru> /bin/bash
-
-Nastavení editoru:
-
-    Nastavte proměnnou prostředí pro editor (např. nano):
-
-    export EDITOR=nano
-
-Úprava credentials pomocí Rails:
-
-    Spusťte příkaz pro úpravu credentials:
-
-    rails credentials:edit
-
-    Otevře se dočasný soubor s dešifrovanými credentials. Najděte proměnnou (např. FE_URL) a změňte její hodnotu na produkční URL.
-
-    Uložte změny a ukončete editor (v nano: Ctrl+O, potvrďte Enter, a pak Ctrl+X).
-
-Ukončení shellu:
-
-    Po uložení se změny automaticky zašifrují a uloží do souboru config/credentials.yml.enc.
-
-    Ukončete shell:
-
-        exit
-
-3. Úprava Dockerfile pro produkční prostředí
-
-   Zachování lokální konfigurace:
-
-        Přejmenujte stávající soubor Dockerfile na Dockerfile.local, aby se zachovala lokální verze:
-
-   mv Dockerfile Dockerfile.local
-
-Aktivace produkční konfigurace:
-
-    Přejmenujte soubor Dockerfile.production na Dockerfile (odeberte příponu .production):
-
-        mv Dockerfile.production Dockerfile
-
-4. Úprava docker-compose souboru
-
-   Přejmenujte soubor docker-compose.yml na docker-compose.yml.local:
-
-   mv docker-compose.yml docker-compose.yml.local
-
-5. Spuštění deploy skriptu
-
-   Na konci spusťte deploy pomocí příkazu:
-
-   kamal deploy
+This will build the required Docker images and start all necessary containers.

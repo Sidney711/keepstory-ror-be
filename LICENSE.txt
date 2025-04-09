@@ -1,0 +1,22 @@
+Personal, Non-Commercial License
+
+Copyright (c) 2025 Zdeněk Carbol
+
+By using this application, you are granted a non-exclusive, non-transferable license to use it only for your personal purposes and strictly for non-commercial use.
+
+Terms of Use
+
+- Use at Your Own Risk:
+  This application is provided "as is," without any warranties or conditions, either express or implied. Any use of this application is solely at your own risk.
+
+- Personal Use Only:
+  You may use this application exclusively for your personal purposes. Any commercial use is strictly prohibited.
+
+- Distribution:
+  You are not allowed to distribute, sell, sublicense, or otherwise make this application available to any third parties. Any modification of the source code or incorporation of any parts of it into other projects without prior written permission is not permitted.
+
+Limitation of Liability
+
+The author/provider of this application shall not be liable for any direct or indirect damages that may arise from the use of this application, including but not limited to data loss, security breaches, or other financial losses.
+
+By using this application, you acknowledge that you have read, understood, and agreed to the terms outlined above.
