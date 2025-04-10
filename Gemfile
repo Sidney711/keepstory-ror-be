@@ -71,3 +71,5 @@ gem 'aws-sdk-ses', '1.78.0'
 gem 'ruby-graphviz', '~> 1.2.5'
 gem "aws-sdk-s3", "1.170", require: false
 gem "aws-sdk-core", "3.211"
+
+gem 'mini_magick', '~> 5.2.0'

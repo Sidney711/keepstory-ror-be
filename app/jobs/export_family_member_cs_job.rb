@@ -12,13 +12,17 @@ class ExportFamilyMemberCsJob < ApplicationJob
 
     profile_picture_tag = ""
     if family_member.profile_picture.attached?
-      image_data = Base64.strict_encode64(family_member.profile_picture.download)
-      profile_picture_tag = "<img src='data:#{family_member.profile_picture.content_type};base64,#{image_data}' alt='Profile Picture' style='max-width:300px; display:block; margin-bottom:15px;'/>"
+      original_data = family_member.profile_picture.download
+      compressed_data = compress_image(original_data, max_width: 500, quality: 50)
+      encoded_image = Base64.strict_encode64(compressed_data)
+      profile_picture_tag = "<img src='data:#{family_member.profile_picture.content_type};base64,#{encoded_image}' alt='Profile Picture' style='max-width:300px; display:block; margin-bottom:15px;'/>"
     end
 
     signature_tag = ""
     if family_member.signature.attached?
-      sig_data = Base64.strict_encode64(family_member.signature.download)
+      original_sig = family_member.signature.download
+      compressed_sig = compress_image(original_sig, max_width: 500, quality: 50)
+      sig_data = Base64.strict_encode64(compressed_sig)
       signature_tag = "<img src='data:#{family_member.signature.content_type};base64,#{sig_data}' alt='Signature' style='max-width:200px; max-height:100px; display:block; margin-top:15px;'/>"
     end
 
@@ -204,7 +208,9 @@ class ExportFamilyMemberCsJob < ApplicationJob
     if family_member.images.attached?
       gallery_html = "<div class='gallery-h'><h3>Galerie</h3></div><div class='gallery'>"
       family_member.images.each do |image|
-        img_data = Base64.strict_encode64(image.download)
+        original_img = image.download
+        compressed_img = compress_image(original_img, max_width: 500, quality: 50)
+        img_data = Base64.strict_encode64(compressed_img)
         gallery_html << "<div class='gallery-item'><img src='data:#{image.content_type};base64,#{img_data}' alt='Gallery Image' /></div>"
       end
       gallery_html << "</div>"
@@ -353,5 +359,14 @@ class ExportFamilyMemberCsJob < ApplicationJob
       content_type: 'application/pdf'
     )
     ExportMailer.export_member_ready_cs_email(family_member).deliver_later
+  end
+
+  private
+
+  def compress_image(image_data, max_width: 1024, quality: 80)
+    image = MiniMagick::Image.read(image_data)
+    image.resize "#{max_width}x#{max_width}>"
+    image.quality quality.to_s
+    image.to_blob
   end
 end

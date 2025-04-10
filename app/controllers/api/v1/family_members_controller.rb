@@ -50,7 +50,16 @@ class Api::V1::FamilyMembersController < ApplicationController
         render json: { errors: ["Only image files (JPEG, PNG, GIF) are allowed"] }, status: :unprocessable_entity and return
       end
 
-      resource.profile_picture.attach(file)
+      original_data = file.read
+      compressed_data = compress_image(original_data, max_width: 500, quality: 50)
+      compressed_io = StringIO.new(compressed_data)
+
+      resource.profile_picture.attach(
+        io: compressed_io,
+        filename: file.original_filename,
+        content_type: file.content_type
+      )
+
       if resource.profile_picture.attached?
         render json: { profile_picture_url: rails_blob_url(resource.profile_picture, only_path: true) }, status: :ok
       else
@@ -85,7 +94,16 @@ class Api::V1::FamilyMembersController < ApplicationController
         render json: { errors: ["Only image files (JPEG, PNG, GIF) are allowed for signature"] }, status: :unprocessable_entity and return
       end
 
-      resource.signature.attach(file)
+      original_sig = file.read
+      compressed_sig = compress_image(original_sig, max_width: 500, quality: 50)
+      sig_io = StringIO.new(compressed_sig)
+
+      resource.signature.attach(
+        io: sig_io,
+        filename: file.original_filename,
+        content_type: file.content_type
+      )
+
       if resource.signature.attached?
         render json: { signature_url: rails_blob_url(resource.signature, only_path: true) }, status: :ok
       else
@@ -128,7 +146,14 @@ class Api::V1::FamilyMembersController < ApplicationController
 
     ActiveRecord::Base.transaction do
       files.each do |file|
-        resource.images.attach(file)
+        original_img = file.read
+        compressed_img = compress_image(original_img, max_width: 500, quality: 50)
+        io_obj = StringIO.new(compressed_img)
+        resource.images.attach(
+          io: io_obj,
+          filename: file.original_filename,
+          content_type: file.content_type
+        )
       end
     end
 
@@ -346,5 +371,12 @@ class Api::V1::FamilyMembersController < ApplicationController
       :hobbies_and_interests,
       :short_message
     )
+  end
+
+  def compress_image(image_data, max_width: 1024, quality: 80)
+    image = MiniMagick::Image.read(image_data)
+    image.resize "#{max_width}x#{max_width}>"
+    image.quality quality.to_s
+    image.to_blob
   end
 end
